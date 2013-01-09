@@ -13,7 +13,7 @@ MKDIR = /bin/mkdir -p
 INSTALL = /bin/install
 GZ = /bin/gzip --best
 TAR = /bin/tar
-PYTHON = /usr/bin/python
+PYTHON = /usr/bin/python3
 MAKE ?= /usr/bin/make
 
 # Source directories

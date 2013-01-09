@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 ######################## BEGIN LICENSE BLOCK ########################
 # This file is part of the cygapt package.
@@ -13,7 +13,10 @@
 ######################### END LICENSE BLOCK #########################
 
 from __future__ import print_function
+import sys
+
 from cygapt.main import CygAptMain
 
 if __name__ == '__main__':
-    CygAptMain()
+    if sys.version.startswith("3"):
+        CygAptMain()

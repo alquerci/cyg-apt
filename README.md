@@ -13,8 +13,7 @@ Requirements
 
 * `cygwin` 1.7+
 * `gnupg` 1.4+
-* `python` 2.6+, <3.0
-* `python-argparse` 1.2+
+* `python3` 3.2+
 
 
 Build requirements

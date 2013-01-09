@@ -51,7 +51,7 @@ class CygApt:
         self.rc_options = ['ROOT', 'mirror', 'cache', 'setup_ini', 'distname', 'barred']
         self.distnames = ('curr', 'test', 'prev')
         self.rc_regex = re.compile("^\s*(\w+)\s*=\s*(.*)\s*$")
-        self._forceBarred = ['python', 'python-argparse', 'gnupg'];
+        self._forceBarred = ['python3', 'gnupg'];
         self._shOption = " --norc --noprofile ";
 
         # Default behaviours
