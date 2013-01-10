@@ -10,20 +10,20 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
-import sys
-import urllib
 
-class CygAptURLopener(urllib.FancyURLopener):
+import sys
+import urllib.request, urllib.parse, urllib.error
+
+class CygAptURLopener(urllib.request.FancyURLopener):
     def __init__(self, verbose, *args):
-        urllib.FancyURLopener.__init__(self, *args)
+        urllib.request.FancyURLopener.__init__(self, *args)
         self.verbose = verbose
         self.errcode = 200
         self.barmax = 40
 
     def http_error_default(self, url, fp, errcode, errmsg, headers):
         self.errcode = errcode
-        return urllib.FancyURLopener.http_error_default\
+        return urllib.request.FancyURLopener.http_error_default\
             (self, url, fp, errcode, errmsg, headers)
 
     def dlProgress(self, count, blockSize, totalSize):

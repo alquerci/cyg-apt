@@ -10,11 +10,11 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import unittest
 import os
 import tempfile
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import tarfile
 import bz2
 import hashlib
@@ -67,7 +67,7 @@ class TestCase(unittest.TestCase):
                                           self._var_exename)
         self._dir_exedata = os.path.join(self._dir_data, self._var_exename)
         self._dir_downloads = os.path.join(self._dir_execache,
-                                           urllib.quote(self._var_mirror, '').lower())
+                                           urllib.parse.quote(self._var_mirror, '').lower())
         # build exe tree
         os.mkdir(self._dir_confsetup)
         os.mkdir(self._dir_user)
@@ -400,8 +400,8 @@ echo "postremove ... ok" >> {marker_d}/log;
         );
         f.close();
 
-        self.install.__dict__[distname].size = long(os.path.getsize(tar_name));
-        self.source.__dict__[distname].size = long(os.path.getsize(tar_src_name));
+        self.install.__dict__[distname].size = int(os.path.getsize(tar_name));
+        self.source.__dict__[distname].size = int(os.path.getsize(tar_src_name));
         self.install.__dict__[distname].md5 = md5sum;
         self.source.__dict__[distname].md5 = md5sum_src;
 

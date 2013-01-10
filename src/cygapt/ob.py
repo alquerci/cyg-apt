@@ -10,9 +10,9 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import sys
-from cStringIO import StringIO
+from io import StringIO
 
 class CygAptOb:
     """ Output Buffering Control (like php)

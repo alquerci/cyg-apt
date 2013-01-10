@@ -10,7 +10,7 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import bz2
 import inspect
 import os
@@ -18,15 +18,15 @@ import re
 import shutil
 import subprocess
 import sys
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import platform
 
-from cygapt import CygApt
-from error import CygAptError
-from path_mapper import PathMapper
-import utils as cautils
-import version
-import copying
+from .cygapt import CygApt
+from .error import CygAptError
+from .path_mapper import PathMapper
+from . import utils as cautils
+from . import version
+from . import copying
 
 class CygAptSetup:
     def __init__(self, cygwin_p, verbose):
@@ -211,7 +211,7 @@ class CygAptSetup:
             mirror = main_mirror
         else:
             mirror = rc["mirror"]
-        downloads = self.pm.map_path(rc["cache"]) + '/' + urllib.quote(mirror, '').lower()
+        downloads = self.pm.map_path(rc["cache"]) + '/' + urllib.parse.quote(mirror, '').lower()
         if not mirror[-1] == "/":
             sep = "/"
         else:

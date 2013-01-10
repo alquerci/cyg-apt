@@ -11,16 +11,16 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import sys
 import os
 
-import utils as cautils
-from setup import CygAptSetup
-from ob import CygAptOb
-from argparser import CygAptArgParser
-from cygapt import CygApt
-from error import CygAptError
+from . import utils as cautils
+from .setup import CygAptSetup
+from .ob import CygAptOb
+from .argparser import CygAptArgParser
+from .cygapt import CygApt
+from .error import CygAptError
 
 class CygAptMain():
     def __init__(self):

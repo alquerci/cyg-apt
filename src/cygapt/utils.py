@@ -10,15 +10,15 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import os
 import re
 import shutil
 import sys
-import urlparse
+import urllib.parse
 
-from error import CygAptError
-from url_opener import CygAptURLopener
+from .error import CygAptError
+from .url_opener import CygAptURLopener
 
 def cygpath(path):
     p = os.popen("cygpath \"{0}\"".format(path));
@@ -78,7 +78,7 @@ def rmtree_helper(path):
                 rmtree_helper(fullpath)
 
 def uri_get(directory, uri, verbose=False):
-    up = urlparse.urlparse(uri)
+    up = urllib.parse.urlparse(uri)
     scriptname = os.path.basename(sys.argv[0])
 
     if up.scheme == "file":

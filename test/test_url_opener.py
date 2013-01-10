@@ -11,11 +11,11 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import unittest
 import sys
 from tempfile import TemporaryFile
-from cStringIO import StringIO
+from io import StringIO
 
 from cygapt.url_opener import CygAptURLopener
 

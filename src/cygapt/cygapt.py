@@ -10,7 +10,7 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import gzip
 import hashlib
 import io
@@ -19,11 +19,11 @@ import re
 import shutil
 import sys
 import tarfile
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
-import utils as cautils
-from error import CygAptError
-from path_mapper import PathMapper
+from . import utils as cautils
+from .error import CygAptError
+from .path_mapper import PathMapper
 
 class CygApt:
     def __init__(self, \
@@ -92,7 +92,7 @@ class CygApt:
         # Overrides to the .rc
         if (main_mirror):
             self.mirror = main_mirror
-            self.downloads = self.cache + '/' + urllib.quote(self.mirror, '').lower()
+            self.downloads = self.cache + '/' + urllib.parse.quote(self.mirror, '').lower()
 
         if (main_distname):
             self.distname = main_distname
@@ -1023,7 +1023,7 @@ Before that, you must close all Cygwin programs to perform rebasing
         self.pm = PathMapper(self.PREFIX_ROOT, self.cygwin_p)
         self.config = self.pm.map_path("/etc/setup")
         self.cache = self.pm.map_path(self.cache)
-        self.downloads = self.cache + '/' + urllib.quote(self.mirror, '').lower()
+        self.downloads = self.cache + '/' + urllib.parse.quote(self.mirror, '').lower()
         self.installed_db = self.config + '/installed.db'
 
         # It might seem odd that we don't map these paths: we need

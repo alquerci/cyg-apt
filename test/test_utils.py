@@ -11,7 +11,7 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import unittest
 import sys
 import os

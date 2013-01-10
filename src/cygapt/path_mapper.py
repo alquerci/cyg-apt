@@ -10,10 +10,10 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function
+
 import os
 
-import utils as cautils
+from . import utils as cautils
 
 class PathMapper:
     def __init__(self, root, cygwin_p):
