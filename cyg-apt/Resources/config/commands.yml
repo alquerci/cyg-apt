@@ -1,0 +1,2 @@
+cyg_apt:
+    resource: "@CygAptBundle/Resources/config/commands/layout.yml"

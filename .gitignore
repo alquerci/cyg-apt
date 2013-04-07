@@ -3,4 +3,8 @@ dist
 *.pyc
 .*
 *~
-/src/cygapt/version.py
+/vendor
+/virtualenv.py
+/cyg-apt/cache/*
+/cyg-apt/logs/*
+

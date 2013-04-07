@@ -155,8 +155,6 @@ class TestSetup(TestCase):
 
         self.assertTrue(findout);
 
-    def testUsage(self):
-        self.obj.usage();
 
 if __name__ == "__main__":
     unittest.main()

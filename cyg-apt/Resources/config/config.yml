@@ -1,0 +1,9 @@
+imports:
+    - { resource: parameters.yml }
+
+framework:
+    default_locale: %locale%
+    console:
+        router:
+            resource: %kernel.root_dir%/Resources/config/commands.yml
+        exception_controller: CygAptBundle:Exception:show

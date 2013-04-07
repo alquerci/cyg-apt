@@ -12,35 +12,31 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import print_function;
 from __future__ import absolute_import;
 
 from distutils.core import setup;
 import os;
 
-realpathfile = os.path.realpath(os.path.dirname(__file__));
-realpathcwd = os.path.realpath(os.getcwd());
-
-if realpathfile != realpathcwd:
-    os.chdir(realpathfile);
+__DIR__ = os.path.dirname(os.path.abspath(__file__));
 
 try:
     version = os.environ['VERSION'];
 except KeyError:
-    version = "1.1.0b3";
+    version = "2.0.0-DEV";
 
 try:
     pkgname = os.environ['PYPKG'];
 except KeyError:
     pkgname = "cygapt";
 
-f = open("../README.md");
+f = open(__DIR__ + "/README.md");
 long_description = f.read();
 f.close();
 
 setup(
     name=pkgname,
-    packages=[pkgname, pkgname + ".test"],
+    package_dir={'': 'src'},
+    packages=[pkgname],
     package_data={pkgname: ['LICENSE']},
     version=version,
     description="A Cygwin command line package management tool.",
@@ -61,5 +57,3 @@ setup(
         'Programming Language :: Python',
     ],
 );
-
-os.chdir(realpathcwd);

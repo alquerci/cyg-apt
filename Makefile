@@ -24,13 +24,10 @@ SD_TEST = $(SD_ROOT)/test
 SD_DIST = $(SD_ROOT)/dist
 SD_DOC = $(SD_ROOT)/doc
 SD_TOOLS = $(SD_ROOT)/tools
+SD_VENDOR = $(SD_ROOT)/vendor
 
 # source environement
-VERSION = 1.1.0b3
-VERSION_FILE = VERSION-FILE~
-$(VERSION_FILE): FORCE
-	@$(SHELL_PATH) ./VERSION-GEN
--include $(VERSION_FILE)
+VERSION = 2.0.0-DEV
 
 # install environement
 EXENAME = cyg-apt
@@ -46,8 +43,12 @@ ID_DATA = $(ID_PREFIX)/share
 ID_MAN = $(ID_DATA)/man
 ID_INFO = $(ID_DATA)/info
 
-build: FORCE
-	@cd $(SD_SRC); $(MAKE)
+vendor: FORCE
+	curl -sS https://raw.github.com/pypa/virtualenv/master/virtualenv.py | $(PYTHON) - $(SD_VENDOR)
+	$(SD_VENDOR)/bin/python $(SD_VENDOR)/bin/pip install -r requirements.txt
+
+build: vendor FORCE
+	@cd $(SD_ROOT)/$(EXENAME); $(MAKE)
 
 doc: FORCE
 	@cd $(SD_DOC); $(MAKE)
@@ -61,8 +62,8 @@ test: build FORCE
 installtest: install FORCE
 	@cd $(SD_TEST); $(MAKE) $@
 
-install: FORCE
-	@cd $(SD_SRC); $(MAKE) $@
+install: build FORCE
+	@cd $(SD_ROOT)/cyg-apt; $(MAKE) $@
 	@cd $(SD_DOC); $(MAKE) $@
 	@cd $(SD_TOOLS); $(MAKE) $@
 
@@ -78,14 +79,15 @@ packageclean:
 	$(RM) -r $(SD_DIST)
 
 clean: FORCE
+	$(RM) -r $(SD_BUILD)
 	@cd $(SD_TEST); $(MAKE) $@
-	@cd $(SD_SRC); $(MAKE) $@
 	@cd $(SD_DOC); $(MAKE) $@
 	@cd $(SD_TOOLS); $(MAKE) $@
-	$(RM) $(VERSION_FILE)
 
 mrproper: FORCE clean packageclean
-	$(RM) -r $(SD_BUILD)
+	$(RM) -r $(SD_VENDOR)
+	$(RM) -r $(SD_DIST)
+
 
 .PHONY: FORCE
 .EXPORT_ALL_VARIABLES:

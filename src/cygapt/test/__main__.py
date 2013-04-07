@@ -18,7 +18,6 @@ import unittest;
 
 from cygapt.test.test_utils import TestUtils;
 from cygapt.test.test_url_opener import TestUrlOpener;
-from cygapt.test.test_argparser import TestArgParser;
 from cygapt.test.test_ob import TestOb;
 from cygapt.test.test_path_mapper import TestPathMapper;
 from cygapt.test.test_setup import TestSetup;
@@ -30,7 +29,6 @@ class TestCygApt(unittest.TestSuite):
         self.addTests(
             loader.loadTestsFromTestCase(TestUtils),
             loader.loadTestsFromTestCase(TestUrlOpener),
-            loader.loadTestsFromTestCase(TestArgParser),
             loader.loadTestsFromTestCase(TestOb),
             loader.loadTestsFromTestCase(TestPathMapper),
             loader.loadTestsFromTestCase(TestSetup),

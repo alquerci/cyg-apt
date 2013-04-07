@@ -1,0 +1,36 @@
+cyg_apt._setup:
+    resource: setup.yml
+
+cyg_apt._cygapt:
+    resource: cygapt.yml
+    definition:
+        options:
+            download:
+                shortcut: d
+                description: download only
+            mirror:
+                shortcut: m
+                accept_value: true
+                description: use mirror
+            dist:
+                shortcut: t
+                accept_value: true
+                descritpion: set dist name (curr, test, prev)
+            no-deps:
+                shortcut: x
+                description: ignore dependencies
+            regexp:
+                shortcut: s
+                description: search as regex pattern
+            nobarred:
+                shortcut: f
+                description: add/remove packages cyg-apt depends on
+            no-verify:
+                shortcut: X
+                description: do not verify setup.ini signatures
+            nopostinstall:
+                shortcut: y
+                description: do not run postinstall scripts
+            nopostremove:
+                shortcut: z
+                description: do not run preremove/postremove scripts

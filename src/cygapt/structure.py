@@ -18,4 +18,3 @@ class ConfigStructure():
         self.setup_ini = "";
         self.distname = "";
         self.barred = "";
-        self.always_update = False;

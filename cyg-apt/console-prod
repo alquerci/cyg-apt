@@ -1,0 +1,34 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys;
+import os;
+# if you don't want to setup permissions the proper way, just uncomment the following PHP line
+# read http://symfony.com/doc/current/book/installation.html#configuration-and-setup for more information
+# os.umask(0o000);
+
+if sys.version_info < (3, 3):
+    import imp;
+    def load_file(filename, modulename=''):
+        return imp.load_source(modulename, filename);
+else:
+    from importlib.machinery import SourceFileLoader;
+    def load_file(filename, modulename=''):
+        return SourceFileLoader(modulename, filename).load_module();
+
+__DIR__ = os.path.dirname(os.path.realpath(os.path.abspath(__file__)));
+
+load_file(__DIR__ + "/bootstrap.py");
+AppKernel = load_file(__DIR__ + "/app_kernel.py").AppKernel;
+
+from pymfony.component.console import Request;
+
+
+request = Request.createFromGlobals();
+
+kernel = AppKernel('prod', False);
+
+response = kernel.getConsoleKernel().handle(request);
+response.send();
+
+sys.exit(response.getStatusCode());

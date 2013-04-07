@@ -1,0 +1,3 @@
+services:
+    cyg_apt.ob:
+        class: cygapt.ob.CygAptOb

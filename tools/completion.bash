@@ -41,7 +41,7 @@ filelist
 find
 help
 install
-list
+all
 md5
 missing
 new
@@ -63,6 +63,7 @@ version
 --no-deps
 --regexp
 --force
+--nobarred
 --no-verify
 --nopostinstall
 --nopostremove

@@ -1,0 +1,25 @@
+cyg_apt.setup.update:
+    path: update
+    description: fetch current package database from mirror
+    defaults:
+        _controller: CygAptBundle:Setup:update
+    definition:
+        options:
+            no-verify:
+                shortcut: -X
+                description: do not verify setup.ini signatures
+            mirror:
+                shortcut: -m
+                accept_value: true
+                description: use mirror
+
+cyg_apt.setup.setup:
+    path: setup
+    description: create cyg-apt configuration file, it overwrite with -f option
+    defaults:
+        _controller: CygAptBundle:Setup:setup
+    definition:
+        options:
+            force:
+                shortcut: -f
+                description: add/remove packages cyg-apt depends on

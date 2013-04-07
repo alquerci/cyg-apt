@@ -1,0 +1,3 @@
+include LICENSE *.md *.txt *.in cyg-apt/*.py app/console
+recursive-include cyg-apt/Resources *
+recursive-include src */test/test*.py

@@ -30,7 +30,10 @@ echo "#!/bin/bash
 /usr/bin/gpg --import --no-secmem-warning \"$ID_ROOT/$ID_DATA/$EXENAME/$GPG_CYGWIN_PUBKEY\"
 
 # Initialize $EXEC
+\"$ID_ROOT/$ID_EXEC/$EXENAME\" cache:clear
 \"$ID_ROOT/$ID_EXEC/$EXENAME\" setup
+
+exit 0;
 ";
 
 exit 0;

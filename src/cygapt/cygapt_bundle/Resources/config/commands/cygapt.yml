@@ -1,0 +1,172 @@
+cyg_apt.cygapt.ball:
+    path: ball
+    description: fetch current package database from mirror
+    defaults:
+        _controller: CygAptBundle:CygApt:ball
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.download:
+    path: download
+    description: download package (only, do not install)
+    defaults:
+        _controller: CygAptBundle:CygApt:download
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.filelist:
+    path: filelist
+    description: list files installed by given packages
+    defaults:
+        _controller: CygAptBundle:CygApt:filelist
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.find:
+    path: find
+    description: find package containing file
+    defaults:
+        _controller: CygAptBundle:CygApt:find
+    definition:
+        arguments:
+            filename:
+                description: file name to find
+
+cyg_apt.cygapt.install:
+    path: install
+    description: download and install packages with dependencies
+    defaults:
+        _controller: CygAptBundle:CygApt:install
+    definition:
+        arguments:
+            packages:
+                is_array: true
+                description: list of package name
+
+cyg_apt.cygapt.all:
+    path: all
+    description: list installed packages
+    defaults:
+        _controller: CygAptBundle:CygApt:list
+
+cyg_apt.cygapt.md5:
+    path: md5
+    description: check md5 sum of cached package against database
+    defaults:
+        _controller: CygAptBundle:CygApt:md5
+    definition:
+        arguments:
+            package:
+                description: list of package name
+
+cyg_apt.cygapt.missing:
+    path: missing
+    description: print missing dependencies for package
+    defaults:
+        _controller: CygAptBundle:CygApt:missing
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.new:
+    path: new
+    description: list new (upgradable) packages in distribution
+    defaults:
+        _controller: CygAptBundle:CygApt:new
+
+cyg_apt.cygapt.purge:
+    path: purge
+    description: uninstall packages and delete from cache
+    defaults:
+        _controller: CygAptBundle:CygApt:purge
+    definition:
+        arguments:
+            packages:
+                is_array: true
+                description: list of package name
+
+cyg_apt.cygapt.remove:
+    path: remove
+    description: uninstall packages
+    defaults:
+        _controller: CygAptBundle:CygApt:remove
+    definition:
+        arguments:
+            packages:
+                is_array: true
+                description: list of package name
+
+cyg_apt.cygapt.requires:
+    path: requires
+    description: "print requires: for package"
+    defaults:
+        _controller: CygAptBundle:CygApt:requires
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.search:
+    path: search
+    description: search all package descriptions for string
+    defaults:
+        _controller: CygAptBundle:CygApt:search
+    definition:
+        arguments:
+            string:
+                description: a string to search for
+
+cyg_apt.cygapt.show:
+    path: show
+    description: print package description
+    defaults:
+        _controller: CygAptBundle:CygApt:show
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.source:
+    path: source
+    description: download source package
+    defaults:
+        _controller: CygAptBundle:CygApt:source
+    definition:
+        arguments:
+            packages:
+                is_array: true
+                description: list of package name
+
+cyg_apt.cygapt.upgrade:
+    path: upgrade
+    description: all installed packages
+    defaults:
+        _controller: CygAptBundle:CygApt:upgrade
+
+cyg_apt.cygapt.url:
+    path: url
+    description: print tarball url
+    defaults:
+        _controller: CygAptBundle:CygApt:url
+    definition:
+        arguments:
+            package:
+                description: package name
+
+cyg_apt.cygapt.version:
+    path: version
+    description: print installed version
+    defaults:
+        _controller: CygAptBundle:CygApt:version
+    definition:
+        arguments:
+            packages:
+                is_array: true
+                description: list of package name

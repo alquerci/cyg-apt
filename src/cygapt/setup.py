@@ -14,7 +14,6 @@ from __future__ import print_function;
 from __future__ import absolute_import;
 
 import bz2;
-import inspect;
 import os;
 import re;
 import shutil;
@@ -31,8 +30,6 @@ from cygapt.exception import UnexpectedValueException;
 from cygapt.utils import RequestException;
 from cygapt.path_mapper import PathMapper;
 import cygapt.utils as cautils;
-import cygapt.version as version;
-import cygapt.copying as copying;
 from cygapt.structure import ConfigStructure;
 
 class CygAptSetup:
@@ -83,7 +80,6 @@ class CygAptSetup:
     RC_REGEX = re.compile(r"^\s*(\w+)\s*=\s*(.*)\s*$");
     GPG_GOOD_FINGER = "1169 DF9F 2273 4F74 3AA5  9232 A9A2 62FF 6760 41BA";
     GPG_CYG_PUBLIC_RING_URI = "http://cygwin.com/key/pubring.asc";
-    VERSION = version.__version__;
 
     def __init__(self, cygwin_p, verbose):
         self.__cygwinPlatform = cygwin_p;
@@ -93,7 +89,7 @@ class CygAptSetup:
         self.setPathMapper();
         self.__setupDir = "/etc/setup";
         self.__rc = ConfigStructure();
-        
+
         self.__rc.ROOT = self.__pm.getMountRoot();
 
     def getCygwinPlatform(self):
@@ -235,40 +231,6 @@ class CygAptSetup:
         if not os.path.isfile(self.__rc.setup_ini):
             sys.stderr.write('getting {0}\n'.format(self.__rc.setup_ini));
             self.update(rc_file, True);
-
-    def usage(self, cyg_apt_rc=None):
-        print("{0}, version {1}".format(self.__appName, self.VERSION));
-        print(copying.help_message, end="\n\n");
-        if (cyg_apt_rc):
-            print("Configuration: {0}".format(cyg_apt_rc));
-        print("Usage: {0} [OPTION]... COMMAND [PACKAGE]...".format(
-            self.__appName
-        ));
-        print("\n  Commands:");
-        members = [];
-        for m in inspect.getmembers(CygAptSetup) + inspect.getmembers(CygApt):
-            if isinstance(m[1], type(self.usage)) and m[1].__doc__:
-                members.append(m);
-
-        pad = max(len(m[0]) for m in members);
-        for m in members:
-            print("    {0} : {1}".format(m[0].ljust(pad), m[1].__doc__));
-        sys.stdout.write(
-        "{LF}"
-        "  Options:{LF}"
-        "    -d, --download       download only{LF}"
-        "    -h, --help           show brief usage{LF}"
-        "    -m, --mirror=URL     use mirror{LF}"
-        "    -t, --dist=NAME      set dist name (curr, test, prev){LF}"
-        "    -x, --no-deps        ignore dependencies{LF}"
-        "    -s, --regexp         search as regex pattern{LF}"
-        "    -f, --nobarred       add/remove packages cyg-apt depends on{LF}"
-        "    -X, --no-verify      do not verify setup.ini signatures{LF}"
-        "    -y, --nopostinstall  do not run postinstall scripts{LF}"
-        "    -z, --nopostremove   do not run preremove/postremove scripts{LF}"
-        "    -q, --quiet          loggable output - no progress indicator{LF}"
-        "".format(LF="\n")
-        );
 
     def update(self, cyg_apt_rc, verify, main_mirror=None):
         """fetch current package database from mirror"""
