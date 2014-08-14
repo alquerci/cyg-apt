@@ -15,6 +15,7 @@ from __future__ import absolute_import;
 
 import sys;
 import warnings;
+from difflib import unified_diff as diff;
 
 if sys.version_info < (3, ):
     from .py2 import TestCase as BaseTestCase;
@@ -24,6 +25,37 @@ else:
 class TestCase(BaseTestCase):
     """Base class for all cygapt test case.
     """
+
+    def assertEqual(self, expected, actual, message=""):
+        """Asserts that two variables are equal.
+
+        @param expected: mixed
+        @param actual:   mixed
+        @param message:  str
+
+        @raise AssertionError: When the assertion failed
+        """
+        assert isinstance(message, str);
+
+        try:
+            BaseTestCase.assertEqual(self, expected, actual, message);
+        except self.failureException :
+            if not (isinstance(expected, str) and isinstance(actual, str)) :
+                raise;
+        else:
+            return;
+
+        if not message :
+            message = "Failed asserting that two strings are equal.";
+
+        message = "\n".join([message, "".join(list(diff(
+            expected.splitlines(True),
+            actual.splitlines(True),
+            fromfile='Expected',
+            tofile='Actual',
+        )))]);
+
+        raise self.failureException(message);
 
     def _assertDeprecatedWarning(self, message, callback, *args, **kwargs):
         """Asserts that a warning of type "DeprecationWarning" is triggered with message.
