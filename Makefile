@@ -1,5 +1,5 @@
 # Default target
-all:: build tools doc
+all:: build tools doc manifest
 
 # vars utils
 UTIL_SPACE := $() #
@@ -15,6 +15,9 @@ GZ = /bin/gzip --best
 TAR = /bin/tar
 PYTHON = /usr/bin/python
 MAKE ?= /usr/bin/make
+TOUCH = /bin/touch
+FIND = /bin/find
+SED = /bin/sed
 
 # Source directories
 SD_ROOT = $(subst $(UTIL_SPACE),\$(UTIL_SPACE),$(shell pwd))
@@ -55,16 +58,28 @@ doc: FORCE
 tools: FORCE
 	@cd $(SD_TOOLS); $(MAKE)
 
+manifest: build doc tools
+	$(TOUCH) $(SD_BUILD)/$(ID_DATA)/doc/$(EXENAME)/MANIFEST;
+	cd $(SD_BUILD); $(FIND) -P . -type f -or -type l | $(SED) -r "s/^\\./$$(echo $(ID_ROOT) | $(SED) s/\\//\\\\\\//g)/" > $(SD_BUILD)/$(ID_DATA)/doc/$(EXENAME)/MANIFEST;
+
 test: build FORCE
 	@cd $(SD_TEST); $(MAKE)
 
 installtest: install FORCE
 	@cd $(SD_TEST); $(MAKE) $@
 
-install: FORCE
+install: install-manifest FORCE
 	@cd $(SD_SRC); $(MAKE) $@
 	@cd $(SD_DOC); $(MAKE) $@
 	@cd $(SD_TOOLS); $(MAKE) $@
+
+install-manifest: manifest
+	$(CP) $(SD_BUILD)/$(ID_DATA)/doc/$(EXENAME)/MANIFEST $(ID_ROOT)/$(ID_DATA)/doc/$(EXENAME)/MANIFEST;
+
+uninstall: FORCE
+	while read path; do\
+        $(RM) "$$path";\
+    done < $(ID_ROOT)/$(ID_DATA)/doc/$(EXENAME)/MANIFEST;
 
 $(SD_DIST)/$(EXENAME)-$(VERSION): build doc tools
 	$(MKDIR) $(SD_DIST)/$(EXENAME)-$(VERSION)
