@@ -16,12 +16,17 @@ from __future__ import absolute_import;
 import os;
 
 import cygapt.utils as cautils;
+from cygapt.configuration import Configuration;
+from cygapt.platform import Platform;
 
 class PathMapper:
-    def __init__(self, root, cygwin_p):
-        self.__root = root;
+    def __init__(self, config, platform):
+        assert isinstance(config, Configuration);
+        assert isinstance(platform, Platform);
+
+        self.__root = config.get('ROOT').rstrip('\\/');
         self.__mountRoot = "/";
-        self.__cygwinPlatform = cygwin_p;
+        self.__cygwinPlatform = platform.isCygwin();
         self.__map = {};
 
         p = os.popen(self.__root + "/bin/mount");

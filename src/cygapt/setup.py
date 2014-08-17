@@ -35,6 +35,9 @@ import cygapt.utils as cautils;
 import cygapt.version as version;
 import cygapt.copying as copying;
 from cygapt.structure import ConfigStructure;
+from cygapt.configuration import Configuration;
+from cygapt.platform import Platform;
+from cygapt.input import Input;
 
 class CygAptSetup:
     RC_OPTIONS = [
@@ -86,29 +89,26 @@ class CygAptSetup:
     GPG_CYG_PUBLIC_RING_URI = "http://cygwin.com/key/pubring.asc";
     VERSION = version.__version__;
 
-    def __init__(self, cygwin_p, verbose, arch="x86"):
-        self.__cygwinPlatform = cygwin_p;
-        self.__verbose = verbose;
-        self.__appName = os.path.basename(sys.argv[0]);
+    def __init__(self, config, platform, pathMapper):
+        assert isinstance(config, Configuration);
+        assert isinstance(platform, Platform);
+        assert isinstance(pathMapper, PathMapper);
+
+        self.__cygwinPlatform = platform.isCygwin();
+        self.__appName = platform.getAppName();
         self.setTmpDir();
-        self.setPathMapper();
+        self.setPathMapper(pathMapper);
         self.__setupDir = "/etc/setup";
+        self.__config = config;
         self.__rc = ConfigStructure();
-        self.__arch = arch;
-        
         self.__rc.ROOT = self.__pm.getMountRoot();
+        self.__arch = platform.getArchitecture();
 
     def getCygwinPlatform(self):
         return self.__cygwinPlatform;
 
     def setCygwinPlatform(self, cygwin_p):
         self.__cygwinPlatform = bool(cygwin_p);
-
-    def setVerbose(self, verbose):
-        self.__verbose = verbose;
-
-    def getVerbose(self):
-        return self.__verbose;
 
     def getAppName(self):
         return self.__appName;
@@ -173,8 +173,10 @@ class CygAptSetup:
         last_cache = cautils.cygpath(last_cache);
         return (last_cache, last_mirror);
 
-    def setup(self, force=False):
+    def setup(self, input_):
         """create cyg-apt configuration file, it overwrite with -f option"""
+        assert isinstance(input_, Input);
+
         if not self.__cygwinPlatform:
             msg = "setup outside Cygwin not supported.";
             raise PlatformException(msg);
@@ -186,7 +188,7 @@ class CygAptSetup:
         else:
             msg = "Can't locate home directory. Setup failed.";
             raise EnvironementException(msg);
-        if os.path.exists(rc_file) and not force:
+        if os.path.exists(rc_file) and not input_.getOption('force') :
             msg = "{0} exists, not overwriting.".format(rc_file);
             raise PathExistsException(msg, code=0);
 
@@ -220,6 +222,8 @@ class CygAptSetup:
         self.__rc.cache = last_cache;
         self.__rc.setup_ini = "{0}/setup.ini".format(self.__setupDir);
 
+        self.__config.setConfig(self.__rc);
+
         contents = "";
         for i in self.__rc.__dict__:
             if i in list(self.RC_COMMENTS.keys()):
@@ -240,11 +244,16 @@ class CygAptSetup:
             self._writeInstalled(installed_db);
         if not os.path.isfile(self.__rc.setup_ini):
             sys.stderr.write('getting {0}\n'.format(self.__rc.setup_ini));
-            self.update(rc_file, True);
+            input_.setOption('verify', True);
+            self.update(input_);
 
-    def usage(self, cyg_apt_rc=None):
+    def usage(self, input_=None):
+        if None is not input_ :
+            assert isinstance(input_, Input);
+
         print("{0}, version {1}".format(self.__appName, self.VERSION));
         print(copying.help_message, end="\n\n");
+        cyg_apt_rc = self.__config.getPath();
         if (cyg_apt_rc):
             print("Configuration: {0}".format(cyg_apt_rc));
         print("Usage: {0} [OPTION]... COMMAND [PACKAGE]...".format(
@@ -276,35 +285,29 @@ class CygAptSetup:
         "".format(LF="\n")
         );
 
-    def update(self, cyg_apt_rc, verify, main_mirror=None):
+    def update(self, input_):
         """fetch current package database from mirror"""
+        assert isinstance(input_, Input);
+
         sig_name = None;
-        f = open(cyg_apt_rc);
-        lines = f.readlines();
-        f.close();
-        for i in lines:
-            result = self.RC_REGEX.search(i);
-            if result:
-                k = result.group(1);
-                v = result.group(2);
-                if k in self.__rc.__dict__:
-                    self.__rc.__dict__[k] = eval(v);
 
         if(not self.__cygwinPlatform):
-            self.__pm = PathMapper(self.__rc.ROOT[:-1], False);
+            self.__pm = PathMapper(self.__config.get('ROOT')[:-1], False);
 
-        setup_ini = self.__pm.mapPath(self.__rc.setup_ini);
+        setup_ini = self.__pm.mapPath(self.__config.get('setup_ini'));
+
+        main_mirror = input_.getOption('mirror');
         if (main_mirror):
             mirror = main_mirror;
         else:
-            mirror = self.__rc.mirror;
+            mirror = self.__config.get('mirror');
 
         if not mirror :
             raise UnexpectedValueException(
                 "A mirror must be specified on the configuration file \"{0}\" "
                 "or with the command line option \"--mirror\". "
                 "See cygwin.com/mirrors.html for the list of mirrors."
-                "".format(cyg_apt_rc)
+                "".format(self.__config.getPath())
             );
 
         if not mirror[-1] == "/":
@@ -326,7 +329,7 @@ class CygAptSetup:
                 cautils.uri_get(
                     self.__tmpDir,
                     setup_ini_url,
-                    verbose=self.__verbose
+                    verbose=input_.getOption('verbose')
                 );
             except ApplicationException as e:
                 # Failed to find a possible .ini
@@ -352,6 +355,8 @@ class CygAptSetup:
             f.write(decomp);
             f.close();
 
+        verify = input_.getOption('verify');
+
         if not self.__cygwinPlatform:
             sys.stderr.write("WARNING can't verify setup.ini outside Cygwin.\n");
             verify = False;
@@ -360,7 +365,7 @@ class CygAptSetup:
             sig_name = "{0}.sig".format(setup_ini_name);
             sig_url = "{0}{1}{2}{3}".format(mirror, sep, platform_dir, sig_name);
             try:
-                cautils.uri_get(self.__tmpDir, sig_url, verbose=self.__verbose);
+                cautils.uri_get(self.__tmpDir, sig_url, verbose=input_.getOption('verbose'));
             except RequestException as e:
                 msg = (
                     "Failed to download signature {0} Use -X to ignore "
@@ -397,7 +402,7 @@ class CygAptSetup:
                 raise SignatureException(msg);
 
         downloads = os.path.join(
-            self.__pm.mapPath(self.__rc.cache),
+            self.__pm.mapPath(self.__config.get('cache')),
             urllib.quote(mirror, '').lower(),
             platform_dir,
         );
@@ -472,11 +477,11 @@ class CygAptSetup:
 
         sys.stderr.write("OK\n");
 
-    def _gpgImport(self, uri):
+    def _gpgImport(self, uri, verbose=False):
         if not self.__cygwinPlatform:
             return;
 
-        cautils.uri_get(self.__tmpDir, uri, verbose=self.__verbose);
+        cautils.uri_get(self.__tmpDir, uri, verbose=verbose);
         tmpfile = os.path.join(self.__tmpDir, os.path.basename(uri));
         cmd = "gpg ";
         cmd += "--no-secmem-warning ";

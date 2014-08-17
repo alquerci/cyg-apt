@@ -16,6 +16,8 @@ from __future__ import absolute_import;
 import argparse;
 import warnings;
 
+from cygapt.input import Input;
+
 class CygAptArgParser():
     def __init__(self, usage=None, scriptname=None):
         self.__parser = None;
@@ -196,7 +198,14 @@ class CygAptArgParser():
                 DeprecationWarning
             );
 
-        return args;
+        inputargs = Input();
+        for name, value in args.__dict__.items() :
+            if name in ["command", "package"] :
+                inputargs.setArgument(name, value);
+            else:
+                inputargs.setOption(name, value);
+
+        return inputargs;
 
     def __castTypes(self, args):
         if args.mirror and isinstance(args.mirror, list):

@@ -31,6 +31,11 @@ from cygapt.exception import PathExistsException;
 from cygapt.exception import UnexpectedValueException;
 from cygapt.setup import SignatureException;
 from cygapt.ob import CygAptOb;
+from cygapt.configuration import Configuration;
+from cygapt.platform import Platform;
+from cygapt.input import Input;
+from cygapt.path_mapper import PathMapper;
+from cygapt.structure import ConfigStructure;
 
 
 class TestSetup(TestCase):
@@ -38,16 +43,41 @@ class TestSetup(TestCase):
         TestCase.setUp(self);
         self._var_verbose = False;
         self._var_cygwin_p = sys.platform.startswith("cygwin");
-        self.obj = CygAptSetup(self._var_cygwin_p, self._var_verbose);
+
+        self._platformMock = Platform();
+        self._platformMock.isCygwin = lambda: self._var_cygwin_p;
+        self._platformMock.getAppName = lambda: self._var_exename;
+
+        self._configMock = Configuration(self._platformMock);
+        self._configMock.getPath = lambda: self._file_user_config;
+        rc = ConfigStructure();
+        rc.cache = self._dir_execache;
+        rc.distname = 'curr';
+        rc.mirror = self._var_mirror;
+        rc.ROOT = self._dir_mtroot;
+        rc.setup_ini = self._file_setup_ini;
+        self._configMock.get = lambda name: rc.__dict__[name];
+        self._rc = rc;
+
+        self._inputMock = Input();
+        self._inputMock.setOption('verbose', self._var_verbose);
+        self._inputMock.setOption('verify', True);
+        self._inputMock.setOption('force', False);
+        self._inputMock.setOption('mirror', None);
+
+        platformMock = Platform();
+        platformMock.isCygwin = lambda: False;
+        configMock = Configuration(platformMock);
+        configMock.get = lambda name: "";
+        pathMapperMock = PathMapper(configMock, platformMock);
+
+        self.obj = CygAptSetup(self._configMock, self._platformMock, pathMapperMock);
         self.obj.setTmpDir(self._dir_tmp);
-        self.obj.setAppName(self._var_exename);
         self.obj.setSetupDir(self._dir_confsetup);
-        self.obj.getRC().ROOT = self._dir_mtroot;
 
     def test__init__(self):
         self.assertTrue(isinstance(self.obj, CygAptSetup));
         self.assertEqual(self.obj.getCygwinPlatform(), self._var_cygwin_p);
-        self.assertEqual(self.obj.getVerbose(), self._var_verbose);
 
     def testGetSetupRc(self):
         if not self._var_cygwin_p:
@@ -88,9 +118,10 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._writeUserConfig(self._file_user_config);
+        self._inputMock.setOption('mirror', self._var_mirror_http);
 
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
-        self.obj.update(self._file_user_config, True, self._var_mirror_http);
+        self.obj.update(self._inputMock);
 
     def testUpdateWithBadMirrorSignature(self):
         if not self._var_cygwin_p:
@@ -100,7 +131,7 @@ class TestSetup(TestCase):
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
 
         try:
-            self.obj.update(self._file_user_config, True);
+            self.obj.update(self._inputMock);
         except Exception as e:
             self.assertTrue(isinstance(e, SignatureException));
             self.assertEqual(e.getMessage(), " ".join([
@@ -118,8 +149,9 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._writeUserConfig(self._file_user_config);
+        self._inputMock.setOption('verify', False);
 
-        self.obj.update(self._file_user_config, False);
+        self.obj.update(self._inputMock);
 
         self._assertUpdate();
 
@@ -132,8 +164,9 @@ class TestSetup(TestCase):
         self.obj.setArchitecture(self._var_arch);
 
         self._writeUserConfig(self._file_user_config);
+        self._inputMock.setOption('verify', False);
 
-        self.obj.update(self._file_user_config, False);
+        self.obj.update(self._inputMock);
 
         self._assertUpdate();
 
@@ -142,10 +175,12 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._var_mirror = "";
+        self._rc.mirror = self._var_mirror;
         self._writeUserConfig(self._file_user_config);
+        self._inputMock.setOption('verify', False);
 
         try:
-            self.obj.update(self._file_user_config, False);
+            self.obj.update(self._inputMock);
         except Exception as e:
             self.assertTrue(isinstance(e, UnexpectedValueException));
             self.assertEqual(e.getMessage(), (
@@ -167,22 +202,23 @@ class TestSetup(TestCase):
 
         # env HOME not exists
         os.environ.pop('HOME');
-        self.assertRaises(EnvironementException, self.obj.setup);
+        self.assertRaises(EnvironementException, self.obj.setup, self._inputMock);
         os.environ['HOME'] = self._dir_user;
 
         # config file already isset
         f = open(self._file_user_config, 'w');
         f.close();
-        self.assertRaises(PathExistsException, self.obj.setup);
+        self.assertRaises(PathExistsException, self.obj.setup, self._inputMock);
         self.assertTrue(os.path.exists(self._file_user_config));
 
         os.remove(self._file_user_config);
 
         # next
         self._var_mirror = self._var_mirror_http;
+        self._rc.mirror = self._var_mirror;
         self._writeSetupRc(self._file_setup_rc);
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
-        self.obj.setup();
+        self.obj.setup(self._inputMock);
 
     def testWriteInstalled(self):
         if not self._var_cygwin_p:
@@ -230,7 +266,7 @@ class TestSetup(TestCase):
         self.assertTrue(findout);
 
     def testUsage(self):
-        self.obj.usage();
+        self.obj.usage(self._inputMock);
 
     def testUsageContainPostInstallCommand(self):
         self._assertUsageContainCommand("postinstall");
@@ -240,7 +276,7 @@ class TestSetup(TestCase):
 
     def _assertUsageContainCommand(self, command):
         ob = CygAptOb(True);
-        self.obj.usage();
+        self.obj.usage(self._inputMock);
         ret = ob.getClean();
 
         self.assertTrue("    {0}".format(command) in ret);
