@@ -292,11 +292,12 @@ class CygApt:
         url, md5 = self._getUrl();
         return os.path.join(self.__downloadDir, url);
 
-    def ball(self, input_):
+    def ball(self, input_, subCommand=False):
         """print tarball name"""
         assert isinstance(input_, Input);
 
-        self._initialize(input_);
+        if not subCommand :
+            self._initialize(input_);
 
         print(self.getBall());
 
@@ -320,15 +321,16 @@ class CygApt:
                     self.__appName
                 ));
 
-    def download(self, input_):
+    def download(self, input_, subCommand=False):
         """download package (only, do not install)"""
         assert isinstance(input_, Input);
 
-        self._initialize(input_);
+        if not subCommand :
+            self._initialize(input_);
 
         self._doDownload();
-        self.ball(input_);
-        self.md5(input_);
+        self.ball(input_, True);
+        self.md5(input_, True);
 
     def _noPackage(self):
         return "{0} is not on mirror {1} in [{2}].".format(
@@ -551,11 +553,12 @@ class CygApt:
     def _checkMd5(self):
         return self._getUrl()[1] == self.getMd5();
 
-    def md5(self, input_):
+    def md5(self, input_, subCommand=False):
         """check md5 sum of cached package against database"""
         assert isinstance(input_, Input);
 
-        self._initialize(input_);
+        if not subCommand :
+            self._initialize(input_);
 
         if not os.path.exists(self.getBall()):
             msg = "{0} not downloaded.".format(self.__pkgName);
@@ -1094,8 +1097,7 @@ class CygApt:
                 del missing[self.__pkgName];
 
         for self.__pkgName in list(missing.keys()):
-            input_.setArgument('package', [self.__pkgName]);
-            self.download(input_);
+            self.download(input_, True);
         if input_.getOption('download_p') :
             return;
         for self.__pkgName in list(missing.keys()):
@@ -1227,8 +1229,7 @@ class CygApt:
 
         self.__ballTarget = 'source';
         for self.__pkgName in input_.getArgument('package') :
-            input_.setArgument('package', [self.__pkgName]);
-            self.download(input_);
+            self.download(input_, True);
             self._doUnpack();
 
     def find(self, input_):

@@ -23,11 +23,13 @@ from cygapt.test.test_ob import TestOb;
 from cygapt.test.test_path_mapper import TestPathMapper;
 from cygapt.test.test_setup import TestSetup;
 from cygapt.test.test_cygapt import TestCygApt as TestCygAptClass;
+from cygapt.test.test_mock_objects import MockObjectTest;
 
 class TestCygApt(unittest.TestSuite):
     def __init__(self):
         loader = unittest.TestLoader();
         self.addTests(
+            loader.loadTestsFromTestCase(MockObjectTest),
             loader.loadTestsFromTestCase(TestUtils),
             loader.loadTestsFromTestCase(TestUrlOpener),
             loader.loadTestsFromTestCase(TestArgParser),

@@ -24,7 +24,10 @@ import subprocess;
 import atexit;
 import time;
 
-class TestCase(unittest.TestCase):
+from cygapt.test.case import TestCase as BaseTestCase;
+
+
+class TestCase(BaseTestCase):
     __mirrorDir = None;
 
     def setUp(self):

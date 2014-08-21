@@ -35,7 +35,6 @@ from cygapt.configuration import Configuration;
 from cygapt.platform import Platform;
 from cygapt.input import Input;
 from cygapt.path_mapper import PathMapper;
-from cygapt.structure import ConfigStructure;
 
 
 class TestSetup(TestCase):
@@ -43,37 +42,10 @@ class TestSetup(TestCase):
         TestCase.setUp(self);
         self._var_verbose = False;
         self._var_cygwin_p = sys.platform.startswith("cygwin");
+        self._var_verify = True;
 
-        self._platformMock = Platform();
-        self._platformMock.isCygwin = lambda: self._var_cygwin_p;
-        self._platformMock.getAppName = lambda: self._var_exename;
-
-        self._configMock = Configuration(self._platformMock);
-        self._configMock.getPath = lambda: self._file_user_config;
-        rc = ConfigStructure();
-        rc.cache = self._dir_execache;
-        rc.distname = 'curr';
-        rc.mirror = self._var_mirror;
-        rc.ROOT = self._dir_mtroot;
-        rc.setup_ini = self._file_setup_ini;
-        self._configMock.get = lambda name: rc.__dict__[name];
-        self._rc = rc;
-
-        self._inputMock = Input();
-        self._inputMock.setOption('verbose', self._var_verbose);
-        self._inputMock.setOption('verify', True);
-        self._inputMock.setOption('force', False);
-        self._inputMock.setOption('mirror', None);
-
-        platformMock = Platform();
-        platformMock.isCygwin = lambda: False;
-        configMock = Configuration(platformMock);
-        configMock.get = lambda name: "";
-        pathMapperMock = PathMapper(configMock, platformMock);
-
-        self.obj = CygAptSetup(self._configMock, self._platformMock, pathMapperMock);
-        self.obj.setTmpDir(self._dir_tmp);
-        self.obj.setSetupDir(self._dir_confsetup);
+        self._inputMock = self._createInputMock();
+        self.obj = self._createSetup();
 
     def test__init__(self):
         self.assertTrue(isinstance(self.obj, CygAptSetup));
@@ -118,10 +90,10 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._writeUserConfig(self._file_user_config);
-        self._inputMock.setOption('mirror', self._var_mirror_http);
+        self._var_mirror = self._var_mirror_http;
 
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
-        self.obj.update(self._inputMock);
+        self.obj.update(self._createInputMock());
 
     def testUpdateWithBadMirrorSignature(self):
         if not self._var_cygwin_p:
@@ -149,9 +121,10 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._writeUserConfig(self._file_user_config);
-        self._inputMock.setOption('verify', False);
+        self._var_verify = False;
 
-        self.obj.update(self._inputMock);
+        inputMock = self._createInputMock();
+        self.obj.update(inputMock);
 
         self._assertUpdate();
 
@@ -164,9 +137,10 @@ class TestSetup(TestCase):
         self.obj.setArchitecture(self._var_arch);
 
         self._writeUserConfig(self._file_user_config);
-        self._inputMock.setOption('verify', False);
+        self._var_verify = False;
 
-        self.obj.update(self._inputMock);
+        inputMock = self._createInputMock();
+        self.obj.update(inputMock);
 
         self._assertUpdate();
 
@@ -175,12 +149,14 @@ class TestSetup(TestCase):
             self.skipTest("requires cygwin");
 
         self._var_mirror = "";
-        self._rc.mirror = self._var_mirror;
         self._writeUserConfig(self._file_user_config);
-        self._inputMock.setOption('verify', False);
+        self._var_verify = False;
+
+        inputMock = self._createInputMock();
+        self.obj = self._createSetup();
 
         try:
-            self.obj.update(self._inputMock);
+            self.obj.update(inputMock);
         except Exception as e:
             self.assertTrue(isinstance(e, UnexpectedValueException));
             self.assertEqual(e.getMessage(), (
@@ -215,10 +191,11 @@ class TestSetup(TestCase):
 
         # next
         self._var_mirror = self._var_mirror_http;
-        self._rc.mirror = self._var_mirror;
         self._writeSetupRc(self._file_setup_rc);
+
+        inputMock = self._createInputMock();
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
-        self.obj.setup(self._inputMock);
+        self.obj.setup(inputMock);
 
     def testWriteInstalled(self):
         if not self._var_cygwin_p:
@@ -305,6 +282,65 @@ class TestSetup(TestCase):
         with open(onEtc, 'r') as f :
             actual = f.read();
         self.assertEqual(expected, actual);
+
+    def _createInputMock(self):
+        inputMock = self.getMock(Input);
+        inputMock.getOption.expects(self.atLeastOnce())\
+            .will(self.returnValueMap([
+                ('verbose', {}, self._var_verbose),
+                ('mirror',  {}, self._var_mirror),
+                ('force',   {}, False),
+                ('verify',  {}, self._var_verify),
+            ]))\
+        ;
+
+        return inputMock;
+
+    def _createSetup(self):
+        platformMock = self.getMock(Platform);
+        platformMock.isCygwin.expects(self.once())\
+            .will(self.returnValue(self._var_cygwin_p))\
+        ;
+        platformMock.getAppName.expects(self.once())\
+            .will(self.returnValue(self._var_exename))\
+        ;
+        platformMock.getArchitecture.expects(self.any())\
+            .will(self.returnValue(self._var_arch))\
+        ;
+
+        configMock = self.getMock(Configuration);
+        configMock.getPath.expects(self.once())\
+            .will(self.returnValue(self._file_user_config))\
+        ;
+        configMock.get.expects(self.atLeastOnce())\
+            .will(self.returnValueMap([
+                ('ROOT',            {}, self._dir_mtroot),
+                ('mirror',          {}, self._var_mirror),
+                ('cache',           {}, self._dir_execache),
+                ('setup_ini',       {}, self._file_setup_ini),
+                ('distname',        {}, 'curr'),
+                ('barred',          {}, ''),
+                ('always_update',   {}, False),
+            ]))\
+        ;
+
+        pathMapperMock = self.getMock(PathMapper);
+        def pathCallback(path):
+            if path.startswith(self._dir_mtroot) :
+                return path;
+            return self._dir_mtroot[:-1]+path;
+        pathMapperMock.mapPath.expects(self.atLeastOnce())\
+            .will(self.returnCallback(pathCallback))\
+        ;
+        pathMapperMock.getMountRoot.expects(self.atLeastOnce())\
+            .will(self.returnValue(self._dir_mtroot))\
+        ;
+
+        setup = CygAptSetup(configMock, platformMock, pathMapperMock);
+        setup.setTmpDir(self._dir_tmp);
+        setup.setSetupDir(self._dir_confsetup);
+
+        return setup;
 
 if __name__ == "__main__":
     unittest.main()

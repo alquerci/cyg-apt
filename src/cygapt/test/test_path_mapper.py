@@ -18,21 +18,27 @@ import unittest;
 import sys;
 from tempfile import TemporaryFile;
 
+from cygapt.test.case import TestCase;
 from cygapt.path_mapper import PathMapper;
 from cygapt.configuration import Configuration;
-from cygapt.platform import Platform
+from cygapt.platform import Platform;
 
-class TestPathMapper(unittest.TestCase):
+class TestPathMapper(TestCase):
     def setUp(self):
-        unittest.TestCase.setUp(self);
+        TestCase.setUp(self);
         self._var_root = "";
         self._var_cygwin_p = sys.platform.startswith("cygwin");
 
-        platformMock = Platform();
-        platformMock.isCygwin = lambda : self._var_cygwin_p;
+        platformMock = self.getMock(Platform);
+        platformMock.isCygwin.expects(self.once())\
+            .will(self.returnValue(self._var_cygwin_p))\
+        ;
 
-        configMock = Configuration(platformMock);
-        configMock.get = lambda n: self._var_root;
+        configMock = self.getMock(Configuration);
+        configMock.get.expects(self.once())\
+            .calledWith('ROOT')\
+            .will(self.returnValue(self._var_root))\
+        ;
 
         self.obj = PathMapper(configMock, platformMock);
 

@@ -61,43 +61,47 @@ class TestCygApt(TestCase):
         self._var_installed = 0;
 
         self.obj = self._createCygApt();
+        self._inputMock = self._createInputMock();
 
     def _createCygApt(self):
         """Creates a CygApt instance.
 
         @return: CygApt
         """
+        platformMock = self.getMock(Platform);
+        platformMock.isCygwin.expects(self.once())\
+            .will(self.returnValue(self._var_cygwin_p))\
+        ;
+        platformMock.getAppName.expects(self.once())\
+            .will(self.returnValue(self._var_exename))\
+        ;
 
-        self._platformMock = Platform();
-        self._platformMock.isCygwin = lambda: self._var_cygwin_p;
-        self._platformMock.getAppName = lambda: self._var_exename;
+        self._configMock = self.getMock(Configuration);
+        self._configMock.getPath.expects(self.once())\
+            .will(self.returnValue(self._file_user_config))\
+        ;
+        self._configMock.get.expects(self.atLeastOnce())\
+            .will(self.returnValueMap([
+                ('ROOT',            {}, self._dir_mtroot),
+                ('mirror',          {}, self._var_mirror),
+                ('cache',           {}, self._dir_execache),
+                ('setup_ini',       {}, self._file_setup_ini),
+                ('distname',        {}, 'curr'),
+                ('barred',          {}, ''),
+                ('always_update',   {}, False),
+            ]))\
+        ;
 
-        self._configMock = Configuration(self._platformMock);
-        self._configMock.getPath = lambda: self._file_user_config;
-
-        self._inputMock = Input();
-        self._inputMock.setOption('verbose', self._var_verbose);
-        self._inputMock.setOption('mirror', self._var_mirror);
-        self._inputMock.setOption('download_p', self._var_download_p);
-        self._inputMock.setOption('distname', self._var_distname);
-        self._inputMock.setOption('nodeps_p', self._var_nodeps_p);
-        self._inputMock.setOption('regex_search', self._var_regex_search);
-        self._inputMock.setOption('force', self._var_nobarred);
-        self._inputMock.setOption('nopostinstall', self._var_nopostinstall);
-        self._inputMock.setOption('nopostremove', self._var_nopostremove);
-        self._inputMock.setArgument('package', self._var_files[1:]);
-
-        platformMock = Platform();
-        platformMock.isCygwin = lambda: False;
-        configMock = Configuration(platformMock);
-        configMock.get = lambda name: "";
-        pathMapperMock = PathMapper(configMock, platformMock);
-        pathMapperMock.setRoot(self._dir_mtroot[:-1]);
-        pathMapperMock.setMountRoot(self._dir_mtroot);
-        pathMapperMock.setMap({
-            self._dir_mtroot: self._dir_mtroot,
-            '/usr/bin/ps': '/usr/bin/ps',
-        });
+        pathMapperMock = self.getMock(PathMapper);
+        def pathCallback(path):
+            if path.startswith('/usr/bin/ps') :
+                return path;
+            if path.startswith(self._dir_mtroot) :
+                return path;
+            return self._dir_mtroot[:-1]+path;
+        pathMapperMock.mapPath.expects(self.atLeastOnce())\
+            .will(self.returnCallback(pathCallback))\
+        ;
 
         expected = self._dir_mtroot;
         ret = pathMapperMock.mapPath(self._dir_mtroot);
@@ -108,7 +112,7 @@ class TestCygApt(TestCase):
         ret = pathMapperMock.mapPath("/bin/foo");
         self.assertEqual(ret, self._dir_mtroot[:-1]+"/bin/foo");
 
-        cygapt = CygApt(self._configMock, self._platformMock, pathMapperMock);
+        cygapt = CygApt(self._configMock, platformMock, pathMapperMock);
 
         # set attributes
         cygapt.setDownlaodDir(self._dir_downloads);
@@ -261,7 +265,11 @@ class TestCygApt(TestCase):
         self.assertEqual(ret, expected);
 
     def testSearch(self):
-        self._inputMock.setArgument('package', ['libp']);
+        inputMock = self.getMock(Input);
+        inputMock.getArgument.expects(self.atLeastOnce())\
+            .calledWith('package')\
+            .will(self.returnValue(["libp"]))\
+        ;
 
         expected = "{0} - {1}\n".format(
             self._var_setupIni.libpkg.name,
@@ -269,7 +277,7 @@ class TestCygApt(TestCase):
         );
 
         ob = CygAptOb(True);
-        self.obj.search(self._inputMock);
+        self.obj.search(inputMock);
         ret = ob.getClean();
 
         self.assertEqual(ret, expected);
@@ -293,7 +301,8 @@ class TestCygApt(TestCase):
         self.assertInstall([self.obj.getPkgName()]);
 
     def testDoInstallExternalWithLZMACompression(self):
-        self._inputMock.setArgument('package', ['pkgxz']);
+        self._var_files = ['', 'pkgxz'];
+        self._inputMock = self._createInputMock();
 
         self.testDownload();
         self.obj.setCygwinPlatform(False);
@@ -333,6 +342,7 @@ class TestCygApt(TestCase):
     def testPostRemoveWhenScriptSuccess(self):
         self._var_packagename = "foo";
         self._var_files = ["", "foo", "bar"];
+        self._inputMock = self._createInputMock();
         self.obj = self._createCygApt();
 
         prefoo = os.path.join(self._dir_preremove, "foo.sh");
@@ -358,6 +368,7 @@ class TestCygApt(TestCase):
     def testPostRemoveWhenScriptFails(self):
         self._var_packagename = "foo";
         self._var_files = ["", "foo", "bar"];
+        self._inputMock = self._createInputMock();
         self.obj = self._createCygApt();
 
         prefoo = os.path.join(self._dir_preremove, "foo.sh");
@@ -399,6 +410,7 @@ class TestCygApt(TestCase):
     def testInstallWithLZMACompression(self):
         self._var_packagename = self._var_setupIni.pkgxz.name;
         self._var_files = ["", self._var_packagename];
+        self._inputMock = self._createInputMock();
         self.obj = self._createCygApt();
 
         # INSTALL
@@ -426,8 +438,12 @@ class TestCygApt(TestCase):
         retcurr = f.read();
         f.close();
 
-        self._configMock.set('distname', 'test');
-        self.obj.upgrade(self._inputMock);
+        # upgrade the mirror
+        self._var_setupIni.dists.curr = self._var_setupIni.dists.test;
+        self.obj.setDists(self._var_setupIni.dists.__dict__);
+
+        self._var_files = [''];
+        self.obj.upgrade(self._createInputMock());
 
         f = open(version_file);
         rettest = f.read();
@@ -449,7 +465,11 @@ class TestCygApt(TestCase):
     def testFind(self):
         self.testDoInstall();
 
-        self._inputMock.setArgument('package', ["version"]);
+        inputMock = self.getMock(Input);
+        inputMock.getArgument.expects(self.atLeastOnce())\
+            .calledWith('package')\
+            .will(self.returnValue(["version"]))\
+        ;
 
         pkgname = self._var_setupIni.pkg.name;
         expected = "{0}: {1}\n".format(
@@ -457,7 +477,7 @@ class TestCygApt(TestCase):
             os.path.join("/var", pkgname, "version")
         );
         ob = CygAptOb(True);
-        self.obj.find(self._inputMock);
+        self.obj.find(inputMock);
         ret = ob.getClean();
         self.assertEqual(ret, expected);
 
@@ -582,6 +602,38 @@ class TestCygApt(TestCase):
                 "exit {0:d};",
                 "",
             ]).format(exitCode));
+
+    def _createInputMock(self):
+        inputMock = self.getMock(Input);
+        inputMock.getOption.expects(self.atLeastOnce())\
+            .will(self.returnValueMap([
+                ('verbose',         {}, self._var_verbose),
+                ('mirror',          {}, self._var_mirror),
+                ('download_p',      {}, self._var_download_p),
+                ('distname',        {}, self._var_distname),
+                ('nodeps_p',        {}, self._var_nodeps_p),
+                ('regex_search',    {}, self._var_regex_search),
+                ('force',           {}, self._var_nobarred),
+                ('nopostinstall',   {}, self._var_nopostinstall),
+                ('nopostremove',    {}, self._var_nopostremove),
+            ]))\
+        ;
+
+        class P():
+            package = self._var_files[1:];
+            @classmethod
+            def setPackage(cls, name, value):
+                cls.package = value;
+        inputMock.getArgument.expects(self.atLeastOnce())\
+            .calledWith('package')\
+            .will(self.returnCallback(lambda p: P.package))\
+        ;
+        inputMock.setArgument.expects(self.any())\
+            .calledWith('package')\
+            .will(self.returnCallback(P.setPackage))\
+        ;
+
+        return inputMock;
 
 if __name__ == "__main__":
     unittest.main();
