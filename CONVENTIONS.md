@@ -51,75 +51,6 @@ Classes
 * Every `Interface` class MUST end with `Interface`.
 
 
-Example
--------
-```Python
-import sys;
-
-from package.module import FooClassName;
-
-
-class ClassNameInterface():
-    """The ClassNameInterface provide useful feature.
-
-    This feature is very useful.
-    """
-
-    def methodName(self, bar, baz):
-        """This method do something.
-
-        @param bar: <type> <message>.
-        @param baz: <type> <message>.
-
-        @return: <type> <message>.
-
-        @raise <type>: <message>.
-        """
-
-
-class ClassName(ClassNameInterface):
-    def __init__(self, arg1, arg2):
-        """Python magic method.
-
-        @param arg1: <type> <message>.
-        @param arg2: <type> <message>.
-
-        """
-        self.propertyName = "{1}".format("Public property");
-        self._propertyName = arg1; # Protected property
-        self.__propertyName = arg2; # Private property
-
-        print(self.propertyName, end="", file=sys.stderr);
-
-    def methodName(self, bar, baz):
-        """This public method do somthing.
-
-        @param bar: <type> <message>.
-        @param baz: <type> <message>.
-
-        @return: <type> <message>.
-
-        @raise <type>: <message>.
-        """
-
-    def _methodName(self):
-        """This is a protected method.
-        """
-        pass;
-
-    def __methodName(self):
-        """This is a private method.
-        """
-        pass;
-
-class ClassNameException(Exception):
-    """A ClassNameException.
-    """
-    pass;
-
-```
-
-
 String
 ------
 
@@ -127,3 +58,91 @@ String
 * Single quotes for anything that behaves like an identifier
 * Double quoted raw string literals for regexps
 * Tripled double quotes for docstrings
+
+
+Example
+-------
+
+Since a picture - or some code - is worth a thousand words, here's a short example containing most features described below:
+
+```Python
+# -*- coding: utf-8 -*-
+######################## BEGIN LICENSE BLOCK ########################
+# This file is part of the cygapt package.
+#
+# Copyright (C) 2002-2009 Jan Nieuwenhuizen <janneke@gnu.org>
+#               2002-2009 Chris Cormie <cjcormie@gmail.com>
+#                    2012 James Nylen <jnylen@gmail.com>
+#               2012-2014 Alexandre Quercia <alquerci@email.com>
+#
+# For the full copyright and license information, please view the
+# LICENSE file that was distributed with this source code.
+######################### END LICENSE BLOCK #########################
+
+class BarInterface():
+    """Coding standards demonstration.
+    """
+
+    def getValue(self):
+        """Gets a value.
+
+        @return: str The value
+        """
+
+class FooBar(BarInterface):
+    """Coding standards demonstration.
+    """
+
+    SOME_CONST = 42;
+
+    def __init__(self, dummy, bar=None):
+        """Constructor.
+
+        @param dummy: str Some argument description
+        @param bar: BarInterface Some argument description
+        """
+        assert isinstance(dummy, str);
+        assert None is bar or isinstance(bar, BarInterface);
+
+        # define a private property
+        self.__fooBar = bar.getValue() if bar else self.__transformText(dummy);
+
+    def getValue(self):
+        """Gets a value.
+
+        @return: str The value
+        """
+        return self.__fooBar;
+
+    def __transformText(self, dummy, options=None):
+        """Transformes the dummy following options.
+
+        @param dummy:   str Some argument description
+        @param options: dict Some argument description
+
+        @return: str|None Transformed input
+
+        @raise Exception: When unrecognized dummy option
+        """
+        assert isinstance(dummy, str);
+        assert None is options or isinstance(options, dict);
+
+        mergedOptions = {
+            'some_default': "values",
+            'another_default': "more values",
+        };
+        if options :
+            mergedOptions.update(options);
+
+        if True is dummy :
+            return;
+
+        if "string" == dummy :
+            if "values" == mergedOptions['some_default'] :
+                return dummy[:5];
+
+            return dummy.title();
+
+        raise Exception('Unrecognized dummy option "{0}"'.format(dummy));
+
+```
