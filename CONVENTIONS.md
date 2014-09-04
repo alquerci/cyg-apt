@@ -48,6 +48,7 @@ Classes
 * You can put an `Exception` definition at the end of a file
   if the file is the only one that uses that exception.
 * Every `Exception` class MUST end with `Exception`.
+* Every `Interface` class MUST end with `Interface`.
 
 
 Example
@@ -57,7 +58,15 @@ import sys;
 
 from package.module import FooClassName;
 
-class ClassName():
+
+class ClassNameInterface():
+    """The ClassNameInterface provide some useful features"""
+
+    def methodName(self):
+        """Public method"""
+
+
+class ClassName(ClassNameInterface):
     def __init__(self, arg1, arg2):
         """Python magic method"""
         self.propertyName = "{1}".format("Public property");
