@@ -60,35 +60,61 @@ from package.module import FooClassName;
 
 
 class ClassNameInterface():
-    """The ClassNameInterface provide some useful features"""
+    """The ClassNameInterface provide useful feature.
 
-    def methodName(self):
-        """Public method"""
+    This feature is very useful.
+    """
+
+    def methodName(self, bar, baz):
+        """This method do something.
+
+        @param bar: <type> <message>.
+        @param baz: <type> <message>.
+
+        @return: <type> <message>.
+
+        @raise <type>: <message>.
+        """
 
 
 class ClassName(ClassNameInterface):
     def __init__(self, arg1, arg2):
-        """Python magic method"""
+        """Python magic method.
+
+        @param arg1: <type> <message>.
+        @param arg2: <type> <message>.
+
+        """
         self.propertyName = "{1}".format("Public property");
         self._propertyName = arg1; # Protected property
         self.__propertyName = arg2; # Private property
 
         print(self.propertyName, end="", file=sys.stderr);
 
-    def methodName(self):
-        """Public method"""
-        pass;
+    def methodName(self, bar, baz):
+        """This public method do somthing.
+
+        @param bar: <type> <message>.
+        @param baz: <type> <message>.
+
+        @return: <type> <message>.
+
+        @raise <type>: <message>.
+        """
 
     def _methodName(self):
-        """protected method"""
+        """This is a protected method.
+        """
         pass;
 
     def __methodName(self):
-        """private method"""
+        """This is a private method.
+        """
         pass;
 
 class ClassNameException(Exception):
-    """A ClassName Exception"""
+    """A ClassNameException.
+    """
     pass;
 
 ```
