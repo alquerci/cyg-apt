@@ -12,50 +12,92 @@ interpreted as described in [RFC 2119][].
 [PEP 257]: http://www.python.org/dev/peps/pep-0257/
 
 
-General
--------
-
-* Use classes as much as possible.
-* A file MAY contain one or many interdependent classes.
-* Each statement MUST end with a semicolon `;`.
-
-
-Idioms
-------
-
-* Use only format() method to formatting strings.
-* `print` is a function.
-
-
 Files
 -----
 
 * Code MUST use 4 spaces for indenting, not tabs.
 * All Python files MUST use the Unix LF (line feed) line ending.
 * All Python files MUST end with a single blank line.
+* A file MAY contain one or many interdependent classes.
+* An `exception` module MUST contain all exception classes of a package.
 
 
-Classes
--------
+Structure
+---------
 
-* Class names MUST be declared in `StudlyCaps`.
-* Method names MUST be declared in `camelCase`.
-* Property/Method names MUST start but not ending with
-  TWO underscores `__` to indicate private visibility.
-* Property/Method names MUST start but not ending with
-  ONE underscores `_` to indicate protected visibility.
-* An `exception` module MUST contain all exception classes of the package.
-* Every `Exception` class MUST end with `Exception`.
-* Every `Interface` class MUST end with `Interface`.
+* Each statement MUST end with a semicolon `;`;
+
+* Add a single space after each comma delimiter;
+
+* Add a comma after each sequence types (`dict`, `list`, ...) item in a multi-line
+  form, even after the last one;
+
+* Add a blank line before `return` statements, unless the return is alone inside
+  a statement-group (like an `if` statement);
+
+* Use classes as much as possible.
+
+* Declare public methods first, then protected ones and finally private ones.
+  The exceptions to this rule are the class constructor and the `setUp` and `tearDown` methods
+  of unittest tests, which SHOULD always be the first methods to increase readability;
+
+* Strings SHOULD be concatenated using the `format()` method;
+
+* Use `print()` as a function with `from __future__ import print_function;`
+  on top of the module;
 
 
-String
-------
+Naming Conventions
+------------------
+
+* Use StydlyCaps for class names;
+
+* Use camelCase, not underscores, for variable, function and method names, arguments;
+
+* Use underscores for option names and parameter names;
+
+* Prefix abstract classes with `Abstract`.
+
+* Suffix interfaces with `Interface`;
+
+* Suffix exceptions with `Exception`;
+
+* Property and method names SHOULD NOT ending with an underscore `_`;
+
+* Prefix property and method names with `_` to indicate protected visibility;
+
+* Prefix property and method names with `__` to indicate private visibility;
+
+* Use lowercase alphanumeric characters and underscores for file names;
+
+
+String Delimiters
+-----------------
 
 * Double quotes for text
+
 * Single quotes for anything that behaves like an identifier
+
 * Double quoted raw string literals for regexps
+
 * Tripled double quotes for docstrings
+
+
+Documentation
+-------------
+
+* Add EpyDoc blocks for all classes, methods, and functions;
+
+* Omit the `@return` tag if the method does not return anything;
+
+* The `@param`, `@return` and `@raise` annotations SHOULD only be used;
+
+
+License
+-------
+
+* Cyg-apt is released under the GNU GPL v3 license, and the license block has to be present
+  at the top of every Python file, before the first import.
 
 
 Example
