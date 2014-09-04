@@ -16,7 +16,7 @@ General
 -------
 
 * Use classes as much as possible.
-* A file SHOULD contain only one class (module == class).
+* A file MAY contain one or many interdependent classes.
 * Each statement MUST end with a semicolon `;`.
 
 
@@ -55,7 +55,7 @@ Example
 ```Python
 import sys;
 
-from package.class_name import ClassName;
+from package.module import FooClassName;
 
 class ClassName():
     def __init__(self, arg1, arg2):
