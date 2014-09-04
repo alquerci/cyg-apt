@@ -44,9 +44,7 @@ Classes
   TWO underscores `__` to indicate private visibility.
 * Property/Method names MUST start but not ending with
   ONE underscores `_` to indicate protected visibility.
-* `exception` module SHOULD contain all `Exception` class.
-* You can put an `Exception` definition at the end of a file
-  if the file is the only one that uses that exception.
+* An `exception` module MUST contain all exception classes of the package.
 * Every `Exception` class MUST end with `Exception`.
 * Every `Interface` class MUST end with `Interface`.
 
