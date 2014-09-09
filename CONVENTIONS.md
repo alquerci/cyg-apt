@@ -96,7 +96,7 @@ Documentation
 License
 -------
 
-* Cyg-apt is released under the GNU GPL v3 license, and the license block has to be present
+* Cyg-apt is released under the GNU GPLv3 license, and the license block has to be present
   at the top of every Python file, before the first import.
 
 
