@@ -154,31 +154,35 @@ class FooBar(BarInterface):
         """
         return self.__fooBar;
 
-    def __transformText(self, dummy, options=None):
+    def __transformText(
+        self,
+        dummy,
+        some_default="values",
+        another_default="more values",
+        third_default="more and more values",
+    ):
         """Transformes the dummy following options.
 
-        @param dummy:   str Some argument description
-        @param options: dict Some argument description
+        @param dummy: str Some argument description
+        @param some_default: str Some argument description
+        @param another_default: str Some long argument description
+                                    with some useful explication
+        @param third_default: str Some argument description
 
         @return: str|None Transformed input
 
         @raise Exception: When unrecognized dummy option
         """
         assert isinstance(dummy, str);
-        assert None is options or isinstance(options, dict);
-
-        mergedOptions = {
-            'some_default': "values",
-            'another_default': "more values",
-        };
-        if options :
-            mergedOptions.update(options);
+        assert isinstance(some_default, str);
+        assert isinstance(another_default, str);
+        assert isinstance(third_default, str);
 
         if True is dummy :
             return;
 
         if "string" == dummy :
-            if "values" == mergedOptions['some_default'] :
+            if "values" == some_default :
                 return dummy[:5];
 
             return dummy.title();
