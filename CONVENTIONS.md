@@ -138,8 +138,8 @@ class FooBar(BarInterface):
     def __init__(self, dummy, bar=None):
         """Constructor.
 
-        @param dummy: str Some argument description
-        @param bar: BarInterface Some argument description
+        @param dummy: str          Some argument description
+        @param bar:   BarInterface Some argument description
         """
         assert isinstance(dummy, str);
         assert None is bar or isinstance(bar, BarInterface);
@@ -163,11 +163,11 @@ class FooBar(BarInterface):
     ):
         """Transformes the dummy following options.
 
-        @param dummy: str Some argument description
-        @param some_default: str Some argument description
+        @param dummy:           str Some argument description
+        @param some_default:    str Some argument description
         @param another_default: str Some long argument description
                                     with some useful explication
-        @param third_default: str Some argument description
+        @param third_default:   str Some argument description
 
         @return: str|None Transformed input
 
