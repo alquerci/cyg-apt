@@ -5,5 +5,3 @@ Add missing tests
     For it help you to the source code of cygcheck under the cygwin package
 [ArgParser] Update usage with pretty argparse format ( subparser ? )
 Add language translation
-[Makefile] Add `make uninstall`
-[Makefile] Add configure script for check dependency it must be set macro values

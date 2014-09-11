@@ -20,18 +20,32 @@ Requirements
 Build requirements
 ------------------
 
-* `make` 3.80+
-* `git` 1.7+
+* `make` 3.59+
+
+From source:
+
+    * `automake` 1.9+
 
 
 Install instructions
 --------------------
 
-Briefly the following commands should build, test and install this package.
+From source please run `autoreconf` first to generate all required build scripts:
 
-    $ make
-    $ make test
-    $ make install
+    $ autoreconf -i
+
+Briefly the following commands should configure, make and install this package:
+
+    $ ./configure && make && make install
+
+Some features can be enable by giving to `configure` the option `--enable-FEATURE[=ARG]`:
+
+  * If you want to install the **bash-completion** script then set the `--enable-bash-completion=DIR` option.
+    Where `DIR` may be one of the following directories:
+
+    - `pkg-config --variable=completionsdir bash-completion`
+    - `${BASH_COMPLETION_DIR}`
+    - `/etc/bash_completion.d`
 
 See the [`INSTALL.md`](INSTALL.md) file for more detailed instructions.
 

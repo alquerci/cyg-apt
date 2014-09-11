@@ -31,6 +31,11 @@ from cygapt.exception import InvalidArgumentException;
 from cygapt.exception import UnexpectedValueException;
 from cygapt.path_mapper import PathMapper;
 from cygapt.structure import ConfigStructure;
+from cygapt.config import LN;
+from cygapt.config import BASH;
+from cygapt.config import PS;
+from cygapt.config import XZ;
+from cygapt.config import CYGCHECK;
 
 class CygApt:
     INSTALLED_DB_MAGIC = "INSTALLED.DB 2\n";
@@ -96,7 +101,7 @@ class CygApt:
         # DOS specific
         if not self.__cygwinPlatform:
             self.__lnExists = os.path.exists(
-                "{0}/bin/ln.exe".format(self.__prefixRoot)
+                self.__pm.mapPath(LN)
             );
         else:
             self.__lnExists = True;
@@ -206,7 +211,7 @@ class CygApt:
     def _checkForSetupExe(self):
         # It's far from bulletproof, but it's surprisingly hard to detect
         # setup.exe running since it doesn't lock any files.
-        p = os.popen(self.__pm.mapPath("/bin/ps -W"));
+        p = os.popen(self.__pm.mapPath(PS+" -W"));
         psout = p.readlines();
         p.close();
         setup_re = re.compile(r"(?<![a-z0-9_ -])setup(|-1\.7|-x86|-x86_64)\.exe", re.IGNORECASE);
@@ -665,7 +670,7 @@ class CygApt:
             sys.stderr.write("running: {0}\n".format(file_name));
             if self.__cygwinPlatform:
                 cmd = " ".join([
-                    "bash",
+                    BASH,
                     self.SH_OPTIONS,
                     mapped_file
                 ]);
@@ -1115,7 +1120,7 @@ class CygApt:
             command += self.__dosBash + ' ' + self.SH_OPTIONS;
             command += " -c ";
             command += "'";
-        command += "/bin/cygcheck ";
+        command += CYGCHECK+" ";
         command += options;
         command += pkg_lst;
         if not self.__cygwinPlatform:
@@ -1248,9 +1253,9 @@ class CygApt:
             self.__arch,
             "setup.ini",
         );
-        self.__dosBash = "{0}bin/bash".format(self.__pm.getMountRoot());
-        self.__dosLn = "{0}bin/ln".format(self.__pm.getMountRoot());
-        self.__dosXz = self.__pm.mapPath("/usr/bin/xz");
+        self.__dosBash = self.__pm.mapPath(BASH);
+        self.__dosLn = self.__pm.mapPath(LN);
+        self.__dosXz = self.__pm.mapPath(XZ);
         return 0;
 
     def _isBarredPackage(self, package):

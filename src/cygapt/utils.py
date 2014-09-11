@@ -30,9 +30,10 @@ from cygapt.exception import InvalidArgumentException;
 from cygapt.exception import UnexpectedValueException;
 from cygapt.url_opener import CygAptURLopener;
 from cygapt.structure import ConfigStructure;
+from cygapt.config import CYGPATH;
 
 def cygpath(path):
-    p = os.popen("cygpath \"{0}\"".format(path));
+    p = os.popen(CYGPATH+" \"{0}\"".format(path));
     dospath = p.read().strip();
     p.close();
     return dospath;

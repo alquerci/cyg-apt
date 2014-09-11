@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!@ENV@ @PYTHON@
 # -*- coding: utf-8 -*-
 ######################## BEGIN LICENSE BLOCK ########################
 # This file is part of the cygapt package.
@@ -13,6 +13,13 @@
 ######################### END LICENSE BLOCK #########################
 
 from __future__ import absolute_import;
+
+import sys;
+import os;
+
+pkglibdir = os.path.normcase(r'@pkglibdir@').capitalize();
+if pkglibdir not in sys.path :
+    sys.path.insert(0, pkglibdir);
 
 from cygapt.main import CygAptMain;
 

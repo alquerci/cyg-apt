@@ -24,6 +24,7 @@ from cygapt.exception import ApplicationException;
 from cygapt.exception import UnexpectedValueException;
 from cygapt.test.utils import TestCase;
 from cygapt.structure import ConfigStructure;
+from cygapt.config import XZ;
 
 __DIR__ = os.path.dirname(os.path.realpath(os.path.abspath(__file__)));
 
@@ -388,7 +389,7 @@ class TestUtils(TestCase):
 
         try:
             os.environ['PATH'] = "";
-            self._successOpenTarfile("pkgxz", "/usr/bin/xz");
+            self._successOpenTarfile("pkgxz", XZ);
         finally:
             os.environ['PATH'] = old_path;
 

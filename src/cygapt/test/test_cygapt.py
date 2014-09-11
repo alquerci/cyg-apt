@@ -25,6 +25,8 @@ from cygapt.test.utils import TestCase;
 from cygapt.test.utils import SetupIniProvider;
 from cygapt.path_mapper import PathMapper;
 from cygapt.structure import ConfigStructure;
+from cygapt.config import LN;
+from cygapt.config import BASH;
 
 class TestCygApt(TestCase):
     def setUp(self):
@@ -126,8 +128,8 @@ class TestCygApt(TestCase):
         cygapt.CYG_PREREMOVE_DIR = self._dir_preremove;
         cygapt.CYG_POSTREMOVE_DIR = self._dir_postremove;
 
-        cygapt.setDosBash("/bin/bash");
-        cygapt.setDosLn("/bin/ln");
+        cygapt.setDosBash(BASH);
+        cygapt.setDosLn(LN);
 
         cygapt.setPrefixRoot(self._dir_mtroot[:-1]);
         cygapt.setAbsRoot(self._dir_mtroot);

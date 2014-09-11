@@ -31,9 +31,11 @@ from cygapt.exception import UnexpectedValueException;
 from cygapt.utils import RequestException;
 from cygapt.path_mapper import PathMapper;
 import cygapt.utils as cautils;
-import cygapt.version as version;
+import cygapt as version;
 import cygapt.copying as copying;
 from cygapt.structure import ConfigStructure;
+from cygapt.config import GPG;
+from cygapt.config import CYGCHECK;
 
 class CygAptSetup:
     RC_OPTIONS = [
@@ -373,13 +375,7 @@ class CygAptSetup:
                 );
                 raise RequestException(msg, previous=e);
 
-            if self.__cygwinPlatform:
-                gpg_path = "gpg ";
-            else:
-                if self._cygwinVersion() < 1.7:
-                    gpg_path = "/usr/bin/gpg ";
-                else:
-                    gpg_path = "/usr/local/bin/gpg ";
+            gpg_path = GPG+" ";
             cmd = gpg_path + "--verify --no-secmem-warning ";
             cmd += "{0}/{1} ".format(self.__tmpDir, sig_name);
             cmd += "{0}/{1} ".format(self.__tmpDir, setup_ini_name);
@@ -455,7 +451,7 @@ class CygAptSetup:
         sys.stderr.write("creating {0} ... ".format(installed_db));
 
         db_contents = CygApt.INSTALLED_DB_MAGIC;
-        cygcheck_path = self.__pm.mapPath("/bin/cygcheck");
+        cygcheck_path = self.__pm.mapPath(CYGCHECK);
 
         if os.path.exists(cygcheck_path):
             cmd = cygcheck_path + " -cd ";
@@ -488,7 +484,7 @@ class CygAptSetup:
 
         cautils.uri_get(self.__tmpDir, uri, verbose=self.__verbose);
         tmpfile = os.path.join(self.__tmpDir, os.path.basename(uri));
-        cmd = "gpg ";
+        cmd = GPG+" ";
         cmd += "--no-secmem-warning ";
         cmd += "--import {0}".format(tmpfile);
         p = subprocess.Popen(

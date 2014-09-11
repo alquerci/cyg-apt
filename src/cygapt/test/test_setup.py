@@ -32,6 +32,7 @@ from cygapt.exception import PathExistsException;
 from cygapt.exception import UnexpectedValueException;
 from cygapt.setup import SignatureException;
 from cygapt.ob import CygAptOb;
+from cygapt.config import GPG;
 
 
 class TestSetup(TestCase):
@@ -299,7 +300,7 @@ class TestSetup(TestCase):
         self.obj._gpgImport(self.obj.GPG_CYG_PUBLIC_RING_URI);
 
         cmd = " ".join([
-            "gpg",
+            GPG,
             "--no-secmem-warning",
             "--list-public-keys",
             "--fingerprint",

@@ -3,6 +3,8 @@ environment:
         CYG_ROOT: C:/cygwin
         CYG_MIRROR: http://cygwin.uib.no
         CYG_CACHE: C:/cygwin/var/cache/setup
+        # need to set DJDIR because bash fail to read the file descriptor 0
+        DJDIR: /
 
     matrix:
         -
@@ -73,7 +75,7 @@ install:
     - 'if not "%PYTHON_PLATFORM%" == "cygwin" powershell ./.appveyor/install.ps1'
     - 'if not "%PYTHON_PLATFORM%" == "cygwin" dir "C:/python*"'
     - 'appveyor DownloadFile http://cygwin.com/setup-%CYG_ARCH%.exe -FileName setup.exe'
-    - 'setup.exe -qnNdO -R "%CYG_ROOT%" -s "%CYG_MIRROR%" -l "%CYG_CACHE%" -P make -P python -P gnupg > NUL'
+    - 'setup.exe -qnNdO -R "%CYG_ROOT%" -s "%CYG_MIRROR%" -l "%CYG_CACHE%" -P make -P python -P gnupg -P automake > NUL'
     - '%CYG_ROOT%/bin/bash -lc "cygcheck -dc cygwin"'
     - '%PYTHON% --version'
     - '%PYTHON% -c "import sys; print(''Python architecture: {0}''.format(''x64'' if sys.maxsize > 2**32 else ''x86''))"'
@@ -81,15 +83,16 @@ install:
     - 'if "2.6" == "%PYTHON_VERSION%" appveyor DownloadFile https://raw.githubusercontent.com/bewest/argparse/master/argparse.py -FileName %PYTHON_DIR%/Lib/site-packages/argparse.py'
 
 build_script:
-    - '%CYG_ROOT%/bin/bash -lc "cd \"$OLDPWD\"; make PYTHON=\"$PYTHON\""'
+    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; autoreconf -i"'
+    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; ./configure PYTHON=$PYTHON"'
+    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; make"'
 
 test_script:
-    - '%CYG_ROOT%/bin/bash -lc "cd \"$OLDPWD\"; make test PYTHON=\"$PYTHON\""'
-    - '%CYG_ROOT%/bin/bash -lc "cd \"$OLDPWD\"; make install"'
-    - '%CYG_ROOT%/bin/bash -lc "cd \"$OLDPWD\"; make installtest PYTHON=\"$PYTHON\""'
+    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; make distcheck DISTCHECK_CONFIGURE_FLAGS=PYTHON=$PYTHON"'
+    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; cd src; /usr/bin/python cyg-apt setup -q"'
     - ps: 'cp $env:CYG_ROOT/home/$env:USERNAME/.cyg-apt -destination $env:HOMEPATH'
-    - '%PYTHON% %CYG_ROOT%/bin/cyg-apt update -qX'
-    - '%PYTHON% %CYG_ROOT%/bin/cyg-apt ball cygwin> ball~'
+    - '%PYTHON% src/cyg-apt update -qX'
+    - '%PYTHON% src/cyg-apt ball cygwin> ball~'
     - ps: 'Get-Content ball~ | set path; cmd /c $env:CYG_ROOT/bin/cygpath -w $path> ball~'
     - ps: 'Get-Content ball~'
     - ps: 'if (-not(Get-Content ball~ | Test-Path)) { Exit 1 }'

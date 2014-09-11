@@ -24,6 +24,8 @@ import atexit;
 import time;
 
 from cygapt.test.case import TestCase as BaseTestCase;
+from cygapt.config import LN;
+from cygapt.config import XZ;
 
 class TestCase(BaseTestCase):
     __mirrorDir = None;
@@ -495,8 +497,8 @@ class PackageIni():
         f.write('#!/bin/sh\necho "running";');
         f.close();
         ret = 0;
-        ret += os.system('ln -s "' + self.name + '" "' + link_bin_f + '"');
-        ret += os.system('ln "' + bin_f + '" "' + hardlink_bin_f + '"');
+        ret += os.system(LN+' -s "' + self.name + '" "' + link_bin_f + '"');
+        ret += os.system(LN+' "' + bin_f + '" "' + hardlink_bin_f + '"');
         if ret > 0:
             raise OSError("fail to create links");
 
@@ -597,7 +599,7 @@ class PackageIni():
             f.close();
             os.remove(srcPath);
         elif "xz" == compression :
-            subprocess.check_call(['xz', '-f', srcPath]);
+            subprocess.check_call([XZ, '-f', srcPath]);
 
     def _md5Sum(self, path):
         """Generate the md5sum from a file.

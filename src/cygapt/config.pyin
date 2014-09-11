@@ -11,8 +11,31 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-from __future__ import absolute_import;
+# this module has been auto-generated from config.pyin by configure.
 
-import cygapt.config as config;
+# Version number of package
+VERSION = r'@VERSION@';
 
-__version__ = config.VERSION;
+# Define the gpg program path
+GPG = r'@GPG@';
+
+# Define the ln program path
+LN = r'@LN@';
+
+# Define the bash program path
+BASH = r'@BASH@';
+
+# Define the ps program path
+PS = r'@PS@';
+
+# Define the xz program path
+XZ = r'@XZ@';
+
+# Define the mount program path
+MOUNT = r'@MOUNT@';
+
+# Define the cygcheck program path
+CYGCHECK = r'@CYGCHECK@';
+
+# Define the cygpath program path
+CYGPATH = r'@CYGPATH@';

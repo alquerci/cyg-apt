@@ -16,6 +16,7 @@ from __future__ import absolute_import;
 import os;
 
 import cygapt.utils as cautils;
+from cygapt.config import MOUNT;
 
 class PathMapper:
     def __init__(self, root, cygwin_p):
@@ -24,7 +25,7 @@ class PathMapper:
         self.__cygwinPlatform = cygwin_p;
         self.__map = {};
 
-        p = os.popen(self.__root + "/bin/mount");
+        p = os.popen(MOUNT);
         mountout = p.readlines();
         p.close();
         self._addMapping(mountout);

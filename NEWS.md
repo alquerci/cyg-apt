@@ -20,3 +20,12 @@ News
 
       - `<cachedir>/<mirror>/<arch>/setup.ini`
 
+* 1.1.0 ()
+
+  * the python library of this package is private so it does not install under
+    the standard python `site-package` directory but on `pkglibdir`
+    (default: `/usr/local/lib/cyg-apt`)
+
+  * to build from source it requires the `automake` package
+
+  * the build command line: `autoreconf -i && ./configure && make`
