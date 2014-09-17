@@ -29,13 +29,13 @@ Structure
 
 * Add a single space after each comma delimiter;
 
-* Add a comma after each sequence types (`dict`, `list`, ...) item in a multi-line
-  form, even after the last one;
+* For sequence types (`dict`, `list`, ...) in a multi-line form, add a comma
+  after each item, even the last one;
 
 * Add a blank line before `return` statements, unless the return is alone inside
   a statement-group (like an `if` statement);
 
-* Use classes as much as possible.
+* Use classes as much as possible;
 
 * Declare public methods first, then protected ones and finally private ones.
   The exceptions to this rule are the class constructor and the `setUp` and `tearDown` methods
@@ -50,19 +50,19 @@ Structure
 Naming Conventions
 ------------------
 
-* Use StydlyCaps for class names;
+* Use StudlyCaps for class names;
 
-* Use camelCase, not underscores, for variable, function and method names, arguments;
+* Use camelCase, not underscores, for variable, function, method, and argument names;
 
 * Use underscores for option names and parameter names;
 
-* Prefix abstract classes with `Abstract`.
+* Prefix abstract classes with `Abstract`;
 
 * Suffix interfaces with `Interface`;
 
 * Suffix exceptions with `Exception`;
 
-* Property and method names SHOULD NOT ending with an underscore `_`;
+* Property and method names SHOULD NOT end with an underscore `_`;
 
 * Prefix property and method names with `_` to indicate protected visibility;
 
@@ -161,7 +161,7 @@ class FooBar(BarInterface):
         another_default="more values",
         third_default="more and more values",
     ):
-        """Transformes the dummy following options.
+        """Transforms the dummy following options.
 
         @param dummy:           str Some argument description
         @param some_default:    str Some argument description
