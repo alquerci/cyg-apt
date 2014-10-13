@@ -3,44 +3,42 @@
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <title>cyg-apt</title>
+
+    <title>cyg-apt by alquerci</title>
   </head>
 
   <body>
-    <div id="container">
+    <header>
       <div class="inner">
+        <h1>cyg-apt</h1>
+        <h2>A cygwin command line package management tool like apt-get</h2>
+        <a href="https://github.com/alquerci/cyg-apt" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
 
-        <header>
-          <h1>cyg-apt</h1>
-          <h2>A cygwin command line package management tool like apt-get</h2>
-        </header>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="cyg-apt" class="anchor" href="#cyg-apt"><span class="octicon octicon-link"></span></a>cyg-apt</h1>
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/nylen/cyg-apt/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
-          <a href="https://github.com/nylen/cyg-apt/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
-          <a href="https://github.com/nylen/cyg-apt" id="view-on-github" class="button"><span>View on GitHub</span></a>
-        </section>
+<p>A Cygwin command line package manager.</p>
 
-        <hr>
+<p>Like <code>apt-get</code>, <code>cyg-apt</code> allows you to install and remove packages on the Cygwin command line, and provides other package management functions.</p>
 
-        <section id="main_content">
-          <h1>cyg-apt</h1>
+<p>This project is a fork of <a href="http://code.google.com/p/cyg-apt/">http://code.google.com/p/cyg-apt/</a> with extensive improvements and lots of bugfixes by <a href="https://github.com/alquerci">@alquerci</a>, <a href="https://github.com/nylen">@nylen</a>, and others.</p>
 
-<p>A Cygwin command line package management tool that allows you to install and
-remove packages on the command line, and provides other package management
-functions.  It has a command syntax similar to <code>apt-get</code> and <code>dpkg</code>.</p>
-
-<p>The project's original SVN repository is here:
-<a href="http://code.google.com/p/cyg-apt/">http://code.google.com/p/cyg-apt/</a></p>
-
-<h2>Requirements</h2>
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
 <ul>
 <li>
@@ -51,14 +49,22 @@ functions.  It has a command syntax similar to <code>apt-get</code> and <code>dp
 <code>python</code> 2.6+, &lt;3.0</li>
 <li>
 <code>python-argparse</code> 1.2+</li>
-</ul><h2>Build requirements</h2>
+<li>
+<code>xz</code> (should be installed with Cygwin by default)</li>
+</ul>
+
+<h2>
+<a name="build-requirements" class="anchor" href="#build-requirements"><span class="octicon octicon-link"></span></a>Build requirements</h2>
 
 <ul>
 <li>
 <code>make</code> 3.80+</li>
 <li>
 <code>git</code> 1.7+</li>
-</ul><h2>Install instructions</h2>
+</ul>
+
+<h2>
+<a name="install-instructions" class="anchor" href="#install-instructions"><span class="octicon octicon-link"></span></a>Install instructions</h2>
 
 <p>Briefly the following commands should build, test and install this package.</p>
 
@@ -67,12 +73,12 @@ $ make test
 $ make install
 </code></pre>
 
-<p>See the <code>INSTALL</code> file for more detailed instructions.</p>
+<p>See the <a href="INSTALL.md"><code>INSTALL.md</code></a> file for more detailed instructions.</p>
 
-<h2>Usage</h2>
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>cyg-apt is similar to apt-get.
-You can install, use it and remove packages from the Cygwin command prompt:</p>
+<p><code>cyg-apt</code> is similar to <code>apt-get</code>.  You can use it to install and remove packages (and more) from the Cygwin command prompt:</p>
 
 <pre><code>$ cyg-apt install gdb
 ...
@@ -81,22 +87,85 @@ $ gdb
 $ cyg-apt remove gdb
 </code></pre>
 
-<p>Type <code>cyg-apt --help</code> or <code>man cyg-apt</code> for see all commands and options.</p>
+<p>Type <code>cyg-apt --help</code> or <code>man cyg-apt</code> to see all commands and options:</p>
 
-<h2>Acknowledgments</h2>
+<pre><code>Usage: cyg-apt [OPTION]... COMMAND [PACKAGE]...
+
+  Commands:
+    setup    : create cyg-apt configuration file, it overwrite with -f option
+    update   : fetch current package database from mirror
+    ball     : print tarball name
+    download : download package (only, do not install)
+    filelist : list files installed by given packages
+    find     : find package containing file
+    help     : this help message
+    install  : download and install packages with dependencies
+    list     : list installed packages
+    md5      : check md5 sum of cached package against database
+    missing  : print missing dependencies for package
+    new      : list new (upgradable) packages in distribution
+    purge    : uninstall packages and delete from cache
+    remove   : uninstall packages
+    requires : print requires: for package
+    search   : search all package descriptions for string
+    show     : print package description
+    source   : download source package
+    upgrade  : all installed packages
+    url      : print tarball url
+    version  : print installed version
+
+  Options:
+    -d, --download       download only
+    -h, --help           show brief usage
+    -m, --mirror=URL     use mirror
+    -t, --dist=NAME      set dist name (curr, test, prev)
+    -x, --no-deps        ignore dependencies
+    -s, --regexp         search as regex pattern
+    -f, --nobarred       add/remove packages cyg-apt depends on
+    -X, --no-verify      do not verify setup.ini signatures
+    -y, --nopostinstall  do not run postinstall scripts
+    -z, --nopostremove   do not run preremove/postremove scripts
+    -q, --quiet          loggable output - no progress indicator
+</code></pre>
+
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+
+<p>Cyg-apt is an open source, community-driven project. All code contributions -
+including those of people having commit access - must go through a pull request
+and be approved by a core developer before being merged. This is to ensure
+proper review of all the code.</p>
+
+<p>If you would like to help, take a look at the
+<a href="https://github.com/nylen/cyg-apt/issues">list of issues</a>.</p>
+
+<p>See the <a href="CONTRIBUTING.md"><code>CONTRIBUTING.md</code></a> file for more detailed instructions.</p>
+
+<h2>
+<a name="acknowledgments" class="anchor" href="#acknowledgments"><span class="octicon octicon-link"></span></a>Acknowledgments</h2>
 
 <p>The original cyg-apt was written by Jan Nieuwenhuizen <a href="mailto:janneke@gnu.org">janneke@gnu.org</a>.</p>
 
 <p>For a list of authors, please see the <code>AUTHORS</code> files.</p>
         </section>
 
-        <footer>
-          cyg-apt is maintained by <a href="https://github.com/alquerci">alquerci</a><br>
-          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
-        </footer>
+        <aside id="sidebar">
+          <a href="https://github.com/alquerci/cyg-apt/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/alquerci/cyg-apt/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
 
-        
+          <p class="repo-owner"><a href="https://github.com/alquerci/cyg-apt"></a> is maintained by <a href="https://github.com/alquerci">alquerci</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
       </div>
     </div>
+
+  
   </body>
 </html>
