@@ -10,7 +10,7 @@ AC_DEFUN([CA_PATH_PROG], [
     AS_VAR_IF(
         $1,
         [],
-        [AC_MSG_FAILURE(the $2 program was not found on PATH)],
+        [AC_MSG_FAILURE([AS_ESCAPE(the $2 program could not be found in $PATH)])],
     )
     AC_ARG_VAR($1, the $2 program)
     # checking for $2 program with dos path
