@@ -1,5 +1,13 @@
-build
-dist
 *.pyc
 .*
 *~
+
+# Autotools
+#
+Makefile.in
+Makefile
+/autom4te.cache/
+/aclocal.m4
+/build-aux/
+/configure
+/config.*
