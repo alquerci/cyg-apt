@@ -57,7 +57,7 @@ AM_CONDITIONAL(
 
 
 # checks for programs
-CA_PATH_PYTHON(2.6)
+CA_PATH_PYTHON(2.6, , , 3)
 CA_PROG_CYGPATH_M
 CA_PATH_PROG(GPG, gpg)
 CA_PATH_PROG(LN, ln)
