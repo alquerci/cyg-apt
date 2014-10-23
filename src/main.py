@@ -17,7 +17,11 @@ from __future__ import absolute_import;
 import sys;
 import os;
 
-pkglibdir = os.path.normcase(r'@pkglibdir@').capitalize();
+if sys.platform.startswith('win') :
+    pkglibdir = os.path.normcase(r'@dos_pkglibdir@').capitalize();
+else:
+    pkglibdir = r'@pkglibdir@';
+
 if pkglibdir not in sys.path :
     sys.path.insert(0, pkglibdir);
 

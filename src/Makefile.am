@@ -27,7 +27,8 @@ cyg-apt: $(srcdir)/main.py
 	    | sed \
 	        -e s,'@'ENV'@','$(ENV)',g \
 	        -e s,'@'PYTHON'@','$(PYTHON)',g \
-	        -e s,'@'pkglibdir'@',"`$(CYGPATH_M) '$(pkglibdir)'`",g \
+	        -e s,'@'pkglibdir'@','$(pkglibdir)',g \
+	        -e s,'@'dos_pkglibdir'@','$(shell $(CYGPATH_M) '$(pkglibdir)')',g \
 	    > $@
 
 pkgpythondir = $(pkglibdir)/cygapt

@@ -13,29 +13,56 @@
 
 # this module has been auto-generated from config.pyin by configure.
 
+import sys;
+
 # Version number of package
 VERSION = r'@VERSION@';
 
-# Define the gpg program path
-GPG = r'@GPG@';
+if sys.platform.startswith('win') :
+    # Define the gpg program path
+    GPG = r'@DOS_GPG@';
 
-# Define the ln program path
-LN = r'@LN@';
+    # Define the ln program path
+    LN = r'@DOS_LN@';
 
-# Define the bash program path
-BASH = r'@BASH@';
+    # Define the bash program path
+    BASH = r'@DOS_BASH@';
 
-# Define the ps program path
-PS = r'@PS@';
+    # Define the ps program path
+    PS = r'@DOS_PS@';
 
-# Define the xz program path
-XZ = r'@XZ@';
+    # Define the xz program path
+    XZ = r'@DOS_XZ@';
 
-# Define the mount program path
-MOUNT = r'@MOUNT@';
+    # Define the mount program path
+    MOUNT = r'@DOS_MOUNT@';
 
-# Define the cygcheck program path
-CYGCHECK = r'@CYGCHECK@';
+    # Define the cygcheck program path
+    CYGCHECK = r'@DOS_CYGCHECK@';
 
-# Define the cygpath program path
-CYGPATH = r'@CYGPATH@';
+    # Define the cygpath program path
+    CYGPATH = r'@DOS_CYGPATH@';
+else:
+    # Define the gpg program path
+    GPG = r'@GPG@';
+
+    # Define the ln program path
+    LN = r'@LN@';
+
+    # Define the bash program path
+    BASH = r'@BASH@';
+
+    # Define the ps program path
+    PS = r'@PS@';
+
+    # Define the xz program path
+    XZ = r'@XZ@';
+
+    # Define the mount program path
+    MOUNT = r'@MOUNT@';
+
+    # Define the cygcheck program path
+    CYGCHECK = r'@CYGCHECK@';
+
+    # Define the cygpath program path
+    CYGPATH = r'@CYGPATH@';

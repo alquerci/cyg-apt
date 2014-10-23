@@ -67,7 +67,7 @@ CA_PATH_PROG(XZ, xz)
 CA_PATH_PROG(MOUNT, mount)
 CA_PATH_PROG(CYGCHECK, cygcheck, false)
 CA_PATH_PROG(CYGPATH, cygpath, echo)
-AC_PATH_PROG(ENV, env, /usr/bin/env)
+CA_PATH_PROG(ENV, env)
 
 
 # checks for libraries

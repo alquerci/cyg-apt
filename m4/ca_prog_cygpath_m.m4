@@ -20,12 +20,6 @@ AC_DEFUN([CA_PROG_CYGPATH_M], [
                 [AS_ESCAPE(${CYGPATH} -m, [ ])],
             )],
         )]
-        [AS_CASE(
-            ${PYTHON_PLATFORM},
-            win*,
-            [],
-            [AS_VAR_SET(ca_cv_path_cygpath_m, false)]
-        )]
         [AS_IF(
             ${ca_cv_path_cygpath_m} --version >/dev/null 2>/dev/null,
             [],
