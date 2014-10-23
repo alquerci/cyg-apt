@@ -1,5 +1,5 @@
 dist_pkgdata_DATA = cygwin.sig
-dist_bin_SCRIPTS = cyg-apt
+bin_SCRIPTS = cyg-apt
 
 CLEANFILES = cyg-apt
 EXTRA_DIST = main.py
