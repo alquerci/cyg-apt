@@ -24,7 +24,7 @@ install-data-hook:
 .PHONY: cyg-apt
 cyg-apt: $(srcdir)/main.py
 	cat $^ \
-	    | sed \
+	    | $(SED) \
 	        -e s,'@'ENV'@','$(ENV)',g \
 	        -e s,'@'PYTHON'@','$(PYTHON)',g \
 	        -e s,'@'pkglibdir'@','$(pkglibdir)',g \
