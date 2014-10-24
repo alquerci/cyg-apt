@@ -4,16 +4,16 @@ DIST_SUBDIRS = $(SUBDIRS) \
     build-aux
 
 dist_doc_DATA = \
-    AUTHORS \
-    CONTRIBUTING.md \
-    CONVENTIONS.md \
-    COPYING \
-    ChangeLog \
-    INSTALL.md \
-    LICENSE \
-    NEWS.md \
-    TODO \
-    README.md
+    $(srcdir)/AUTHORS \
+    $(srcdir)/CONTRIBUTING.md \
+    $(srcdir)/CONVENTIONS.md \
+    $(srcdir)/COPYING \
+    $(srcdir)/ChangeLog \
+    $(srcdir)/INSTALL.md \
+    $(srcdir)/LICENSE \
+    $(srcdir)/NEWS.md \
+    $(srcdir)/TODO \
+    $(srcdir)/README.md
 
 ACLOCAL_AMFLAGS = -I m4
 

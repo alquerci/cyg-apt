@@ -1,1 +1,1 @@
-EXTRA_DIST = git-version-gen
+EXTRA_DIST = $(srcdir)/git-version-gen

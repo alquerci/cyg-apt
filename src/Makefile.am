@@ -1,8 +1,8 @@
-dist_pkgdata_DATA = cygwin.sig
+dist_pkgdata_DATA = $(srcdir)/cygwin.sig
 bin_SCRIPTS = cyg-apt
 
 CLEANFILES = cyg-apt
-EXTRA_DIST = main.py
+EXTRA_DIST = $(srcdir)/main.py
 
 check-local:
 	cd $(srcdir) && $(PYTHON) -m cygapt.test.__main__ -v
@@ -45,7 +45,7 @@ pkgpython_PYTHON = \
     $(srcdir)/cygapt/structure.py \
     $(srcdir)/cygapt/url_opener.py \
     $(srcdir)/cygapt/utils.py \
-    $(srcdir)/cygapt/config.py
+    cygapt/config.py
 
 pkgpython_testdir = $(pkgpythondir)/test
 pkgpython_test_PYTHON = \
