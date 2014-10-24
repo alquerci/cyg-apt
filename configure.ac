@@ -32,6 +32,12 @@ AC_ARG_ENABLE(
     )]
     [AS_VAR_IF(
         enable_bash_completion,
+        no,
+        [],
+        [AC_MSG_RESULT(${enable_bash_completion})],
+    )]
+    [AS_VAR_IF(
+        enable_bash_completion,
         [],
         [AC_MSG_ERROR(
             [AS_ESCAPE(
@@ -44,13 +50,7 @@ it can be set with one of the following directories:
             )],
         )],
     )]
-    [AC_SUBST(bash_completiondir, ${enable_bash_completion})]
-    [AS_VAR_IF(
-        enable_bash_completion,
-        no,
-        [],
-        [AC_MSG_RESULT(${bash_completiondir})],
-    )],
+    [AC_SUBST(bash_completiondir, ${enable_bash_completion})],
     [AS_VAR_SET(enable_bash_completion, no)],
 )
 AM_CONDITIONAL(
