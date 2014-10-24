@@ -1,10 +1,12 @@
 # Process this file with autoconf to produce a configure script.
 
+AC_PREREQ(2.64)
 AC_INIT(
     cyg-apt,
     m4_esyscmd_s(build-aux/git-version-gen --fallback='1.1.0-DEV'),
     https://github.com/nylen/cyg-apt/issues,
 )
+AC_CONFIG_SRCDIR(src/cygapt/config.pyin)
 AC_CONFIG_MACRO_DIR(m4)
 AC_CONFIG_AUX_DIR(build-aux)
 AM_INIT_AUTOMAKE(foreign -Wall -Werror subdir-objects)
