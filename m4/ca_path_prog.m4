@@ -3,9 +3,11 @@
 #
 # extends AC_PATH_PROG
 # requires CA_PROG_CYGPATH_M
-# mark the $1 as precious with AC_ARG_VAR
+# define DOS_$1 as dos path
+# mark the $1 and DOS_$1 as precious with AC_ARG_VAR
 #
 AC_DEFUN([CA_PATH_PROG], [
+    AC_REQUIRE([CA_PROG_CYGPATH_M])dnl
     AC_PATH_PROG($1, $2, $3, $4)
     AS_VAR_IF(
         $1,

@@ -2,6 +2,7 @@
 # ----------------------------------------------------------------------------------------------
 #
 # extends AM_PATH_PYTHON
+# checks for $PYTHON is older than MINIMUM-VERSION
 #
 AC_DEFUN([CA_PATH_PYTHON], [
     AM_PATH_PYTHON(
