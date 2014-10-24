@@ -51,6 +51,7 @@ it can be set with one of the following directories:
         [],
         [AC_MSG_RESULT(${bash_completiondir})],
     )],
+    [AS_VAR_SET(enable_bash_completion, no)],
 )
 AM_CONDITIONAL(
     CA_WANT_BASH_COMPLETION,
