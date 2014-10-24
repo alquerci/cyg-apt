@@ -11,7 +11,7 @@
 # LICENSE file that was distributed with this source code.
 ######################### END LICENSE BLOCK #########################
 
-# this module has been auto-generated from config.pyin by configure.
+# @configure_input@
 
 import sys;
 
