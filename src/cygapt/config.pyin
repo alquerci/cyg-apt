@@ -34,9 +34,6 @@ if sys.platform.startswith('win') :
     # Define the xz program path
     XZ = r'@DOS_XZ@';
 
-    # Define the mount program path
-    MOUNT = r'@DOS_MOUNT@';
-
     # Define the cygcheck program path
     CYGCHECK = r'@DOS_CYGCHECK@';
 
@@ -57,9 +54,6 @@ else:
 
     # Define the xz program path
     XZ = r'@XZ@';
-
-    # Define the mount program path
-    MOUNT = r'@MOUNT@';
 
     # Define the cygcheck program path
     CYGCHECK = r'@CYGCHECK@';
