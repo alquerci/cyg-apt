@@ -17,14 +17,14 @@ check-local:
 	cd $(srcdir) && $(PYTHON) -m cygapt.test.__main__ -v
 
 installcheck-local:
-	cd $(DESTDIR)$(pkglibdir) && $(PYTHON) -m cygapt.test.__main__ -v
+	cd '$(DESTDIR)$(pkglibdir)' && $(PYTHON) -m cygapt.test.__main__ -v
 
 install-data-hook:
 	$(POST_INSTALL)
 	if test x = x"$(DESTDIR)"; then \
-	    $(GPG) --import --no-secmem-warning $(pkgdatadir)/cygwin.sig \
+	    $(GPG) --import --no-secmem-warning '$(pkgdatadir)/cygwin.sig' \
 	    && if expr x"$(PYTHON_PLATFORM)" : x'cygwin.*' >/dev/null 2>&1; then \
-	           $(bindir)/cyg-apt setup -q; \
+	           '$(bindir)/cyg-apt' setup -q; \
 	       else :; \
 	       fi \
 	else :; \
