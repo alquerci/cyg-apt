@@ -5,6 +5,7 @@ environment:
         CYG_CACHE: C:/cygwin/var/cache/setup
         # need to set DJDIR because bash fail to read the file descriptor 0
         DJDIR: /
+        CYG_ENV: 'C:/cygwin/bin/bash -lc "cd \"$OLDPWD\" && '
 
     matrix:
         -
@@ -83,16 +84,22 @@ install:
     - 'if "2.6" == "%PYTHON_VERSION%" appveyor DownloadFile https://raw.githubusercontent.com/bewest/argparse/master/argparse.py -FileName %PYTHON_DIR%/Lib/site-packages/argparse.py'
 
 build_script:
-    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; autoreconf -i"'
-    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; ./configure PYTHON=$PYTHON"'
-    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; make"'
+    - '%CYG_ENV% autoreconf -i"'
+    - '%CYG_ENV% ./configure PYTHON=$PYTHON --prefix=\"`pwd`/_inst\""'
 
 test_script:
-    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; make distcheck DISTCHECK_CONFIGURE_FLAGS=PYTHON=$PYTHON"'
-    - '%CYG_ROOT%/bin/bash -lc "cd $OLDPWD; cd src; /usr/bin/python cyg-apt setup -q"'
-    - ps: 'cp $env:CYG_ROOT/home/$env:USERNAME/.cyg-apt -destination $env:HOMEPATH'
-    - '%PYTHON% src/cyg-apt update -qX'
-    - '%PYTHON% src/cyg-apt ball cygwin> ball~'
+    - '%CYG_ENV% make distcheck DISTCHECK_CONFIGURE_FLAGS=PYTHON=$PYTHON"'
+    # test architecture detection
+    - '%CYG_ENV% make install"'
+    - 'echo ROOT="%CYG_ROOT%/">.cyg-apt'
+    - 'echo cache="%CYG_CACHE%">>.cyg-apt'
+    - 'echo mirror="%CYG_MIRROR%">>.cyg-apt'
+    - 'echo distname="curr">>.cyg-apt'
+    - 'set PATH=%APPVEYOR_BUILD_FOLDER%\_inst\bin;%PATH%'
+    - 'if "%PYTHON_PLATFORM%" == "cygwin" %CYG_ENV% cyg-apt update -q"'
+    - 'if "%PYTHON_PLATFORM%" == "cygwin" %CYG_ENV% cyg-apt ball cygwin"> ball~'
+    - 'if not "%PYTHON_PLATFORM%" == "cygwin" cyg-apt update -q'
+    - 'if not "%PYTHON_PLATFORM%" == "cygwin" cyg-apt ball cygwin> ball~'
     - ps: 'Get-Content ball~ | set path; cmd /c $env:CYG_ROOT/bin/cygpath -w $path> ball~'
     - ps: 'Get-Content ball~'
     - ps: 'if (-not(Get-Content ball~ | Test-Path)) { Exit 1 }'
