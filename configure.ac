@@ -62,6 +62,7 @@ AM_CONDITIONAL(
 # checks for programs
 AC_PROG_SED
 CA_PATH_PYTHON(2.6, , , 3)
+AM_CONDITIONAL(CA_WANT_BATCH, expr x"${PYTHON_PLATFORM}" : x'win.*' >/dev/null 2>&1)
 CA_PROG_CYGPATH_M
 CA_PATH_PROG(GPG, gpg)
 CA_PATH_PROG(LN, ln)

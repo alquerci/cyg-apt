@@ -1,8 +1,17 @@
 dist_pkgdata_DATA = $(srcdir)/cygwin.sig
-bin_SCRIPTS = cyg-apt
 
-CLEANFILES = cyg-apt
-EXTRA_DIST = $(srcdir)/main.py
+if CA_WANT_BATCH
+    bin_SCRIPTS = cyg-apt.bat
+else
+    bin_SCRIPTS = cyg-apt
+endif
+
+CLEANFILES = cyg-apt \
+    cyg-apt.bat \
+    cyg-apt.py
+
+EXTRA_DIST = $(srcdir)/main.py \
+    $(srcdir)/main.batin
 
 check-local:
 	cd $(srcdir) && $(PYTHON) -m cygapt.test.__main__ -v
@@ -31,6 +40,22 @@ cyg-apt: $(srcdir)/main.py
 	        -e s,'@'dos_pkglibdir'@','$(shell $(CYGPATH_M) '$(pkglibdir)')',g \
 	    > $@
 
+.PHONY: cyg-apt.bat
+cyg-apt.bat: $(srcdir)/main.batin
+	cat $^ \
+	    | $(SED) \
+	        -e s,'@'PYTHON'@','$(shell $(CYGPATH_M) '$(PYTHON)')',g \
+	        -e s,'@'mainpath'@','$(shell $(CYGPATH_M) '$(pkgpythondir)/cyg-apt.py')',g \
+	    > $@
+
+.PHONY: cyg-apt.py
+cyg-apt.py: $(srcdir)/main.py
+	cat $^ \
+	    | $(SED) \
+	        -e s,'@'pkglibdir'@','$(pkglibdir)',g \
+	        -e s,'@'dos_pkglibdir'@','$(shell $(CYGPATH_M) '$(pkglibdir)')',g \
+	    > $@
+
 pkgpythondir = $(pkglibdir)/cygapt
 pkgpython_PYTHON = \
     $(srcdir)/cygapt/__init__.py \
@@ -45,6 +70,7 @@ pkgpython_PYTHON = \
     $(srcdir)/cygapt/structure.py \
     $(srcdir)/cygapt/url_opener.py \
     $(srcdir)/cygapt/utils.py \
+    cyg-apt.py \
     cygapt/config.py
 
 pkgpython_testdir = $(pkgpythondir)/test
