@@ -23,8 +23,8 @@ News
 * 1.1.0 ()
 
   * the python library of this package is private so it does not install under
-    the standard python `site-package` directory but on `pkglibdir`
-    (default: `/usr/local/lib/cyg-apt`)
+    the standard python `site-package` directory but on `$(pkgdatadir)/python`
+    (default: `/usr/local/share/cyg-apt/python`)
 
   * to build from source it requires the `automake` package
 
