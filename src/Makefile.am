@@ -1,4 +1,4 @@
-dist_pkgdata_DATA = $(srcdir)/cygwin.sig
+dist_pkgdata_DATA = cygwin.sig
 
 if CA_WANT_BATCH
     bin_SCRIPTS = cyg-apt.bat
@@ -10,8 +10,8 @@ CLEANFILES = cyg-apt \
     cyg-apt.bat \
     cyg-apt.py
 
-EXTRA_DIST = $(srcdir)/main.py \
-    $(srcdir)/main.batin
+EXTRA_DIST = main.py \
+    main.batin
 
 check-local:
 	cd $(srcdir) && $(PYTHON) -m cygapt.test.__main__ -v
@@ -61,56 +61,56 @@ private_python_PYTHON = cyg-apt.py
 
 private_python_cygaptdir = $(private_pythondir)/cygapt
 private_python_cygapt_PYTHON = \
-    $(srcdir)/cygapt/__init__.py \
-    $(srcdir)/cygapt/argparser.py \
-    $(srcdir)/cygapt/copying.py \
-    $(srcdir)/cygapt/cygapt.py \
-    $(srcdir)/cygapt/exception.py \
-    $(srcdir)/cygapt/main.py \
-    $(srcdir)/cygapt/ob.py \
-    $(srcdir)/cygapt/path_mapper.py \
-    $(srcdir)/cygapt/setup.py \
-    $(srcdir)/cygapt/structure.py \
-    $(srcdir)/cygapt/url_opener.py \
-    $(srcdir)/cygapt/utils.py \
+    cygapt/__init__.py \
+    cygapt/argparser.py \
+    cygapt/copying.py \
+    cygapt/cygapt.py \
+    cygapt/exception.py \
+    cygapt/main.py \
+    cygapt/ob.py \
+    cygapt/path_mapper.py \
+    cygapt/setup.py \
+    cygapt/structure.py \
+    cygapt/url_opener.py \
+    cygapt/utils.py \
     cygapt/config.py
 
 private_python_cygapt_testdir = $(private_python_cygaptdir)/test
 private_python_cygapt_test_PYTHON = \
-    $(srcdir)/cygapt/test/__init__.py \
-    $(srcdir)/cygapt/test/__main__.py \
-    $(srcdir)/cygapt/test/test_argparser.py \
-    $(srcdir)/cygapt/test/test_cygapt.py \
-    $(srcdir)/cygapt/test/test_ob.py \
-    $(srcdir)/cygapt/test/test_path_mapper.py \
-    $(srcdir)/cygapt/test/test_setup.py \
-    $(srcdir)/cygapt/test/test_url_opener.py \
-    $(srcdir)/cygapt/test/test_utils.py \
-    $(srcdir)/cygapt/test/utils.py
+    cygapt/test/__init__.py \
+    cygapt/test/__main__.py \
+    cygapt/test/test_argparser.py \
+    cygapt/test/test_cygapt.py \
+    cygapt/test/test_ob.py \
+    cygapt/test/test_path_mapper.py \
+    cygapt/test/test_setup.py \
+    cygapt/test/test_url_opener.py \
+    cygapt/test/test_utils.py \
+    cygapt/test/utils.py
 
 private_python_cygapt_test_casedir = $(private_python_cygapt_testdir)/case
 private_python_cygapt_test_case_PYTHON = \
-    $(srcdir)/cygapt/test/case/__init__.py \
-    $(srcdir)/cygapt/test/case/exception.py
+    cygapt/test/case/__init__.py \
+    cygapt/test/case/exception.py
 
 private_python_cygapt_test_case_py2dir = $(private_python_cygapt_test_casedir)/py2
 private_python_cygapt_test_case_py2_PYTHON = \
-    $(srcdir)/cygapt/test/case/py2/__init__.py \
-    $(srcdir)/cygapt/test/case/py2/exception.py
+    cygapt/test/case/py2/__init__.py \
+    cygapt/test/case/py2/exception.py
 
 private_python_cygapt_test_case_py2_minor6dir = $(private_python_cygapt_test_case_py2dir)/minor6
 private_python_cygapt_test_case_py2_minor6_PYTHON = \
-    $(srcdir)/cygapt/test/case/py2/minor6/__init__.py \
-    $(srcdir)/cygapt/test/case/py2/minor6/exception.py
+    cygapt/test/case/py2/minor6/__init__.py \
+    cygapt/test/case/py2/minor6/exception.py
 
 private_python_cygapt_test_fixturesdir = $(private_python_cygapt_testdir)/fixtures
 
 private_python_cygapt_test_fixtures_utilsdir = $(private_python_cygapt_test_fixturesdir)/utils
 dist_private_python_cygapt_test_fixtures_utils_DATA = \
-    $(srcdir)/cygapt/test/fixtures/utils/README \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa-bad1.dll \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa-bad2.dll \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa-bad3.dll \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa-bad4.dll \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa.dll \
-    $(srcdir)/cygapt/test/fixtures/utils/cyglsa64.dll
+    cygapt/test/fixtures/utils/README \
+    cygapt/test/fixtures/utils/cyglsa-bad1.dll \
+    cygapt/test/fixtures/utils/cyglsa-bad2.dll \
+    cygapt/test/fixtures/utils/cyglsa-bad3.dll \
+    cygapt/test/fixtures/utils/cyglsa-bad4.dll \
+    cygapt/test/fixtures/utils/cyglsa.dll \
+    cygapt/test/fixtures/utils/cyglsa64.dll

@@ -3,7 +3,7 @@ if CA_WANT_BASH_COMPLETION
 endif
 
 CLEANFILES = cyg-apt
-EXTRA_DIST = $(srcdir)/completion.bash
+EXTRA_DIST = completion.bash
  
 cyg-apt: $(srcdir)/completion.bash
 	cp $^ $@
