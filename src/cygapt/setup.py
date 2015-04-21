@@ -373,7 +373,7 @@ class CygAptSetup:
                 raise RequestException(msg, previous=e);
 
             if self.__cygwinPlatform:
-                gpg_path = "gpg";
+                gpg_path = "/usr/bin/gpg";
             else:
                 if self._cygwinVersion() < 1.7:
                     gpg_path = "/usr/bin/gpg";
@@ -477,7 +477,7 @@ class CygAptSetup:
 
         cautils.uri_get(self.__tmpDir, uri, verbose=self.__verbose);
         tmpfile = os.path.join(self.__tmpDir, os.path.basename(uri));
-        cmd = ["gpg"];
+        cmd = ["/usr/bin/gpg"];
         cmd.append("--no-secmem-warning");
         cmd += ["--import", tmpfile];
         Process(cmd).mustRun();

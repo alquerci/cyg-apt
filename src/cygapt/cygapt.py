@@ -677,7 +677,7 @@ class CygApt:
         mapped_file_done = mapped_file + ".done";
         if os.path.isfile(mapped_file):
             sys.stderr.write("running: {0}\n".format(file_name));
-            cmd = ["bash"] + self.SH_OPTIONS + [mapped_file];
+            cmd = ["/bin/bash"] + self.SH_OPTIONS + [mapped_file];
             if not self.__cygwinPlatform:
                 cmd[0] = self.__dosBash;
 
@@ -685,7 +685,7 @@ class CygApt:
             extension = os.path.splitext(mapped_file)[1];
 
             if ".dash" == extension :
-                cmd = ["dash"] + self.DASH_OPTIONS + [mapped_file];
+                cmd = ["/bin/dash"] + self.DASH_OPTIONS + [mapped_file];
                 if not self.__cygwinPlatform:
                     cmd[0] = self.__dosDash;
 
