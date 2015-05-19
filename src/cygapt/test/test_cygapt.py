@@ -136,6 +136,7 @@ class TestCygApt(TestCase):
 
         cygapt.FORCE_BARRED.extend([
             self._var_setupIni.barredpkg.name,
+            'barredcapspkg',
         ]);
 
         return cygapt;
@@ -260,7 +261,7 @@ class TestCygApt(TestCase):
     def testGetRequires(self):
         expected = self._var_setupIni.pkg.requires.split(" ");
         ret = self.obj.getRequires();
-        self.assertEqual(ret, expected);
+        self.assertEqual(sorted(ret), sorted(expected));
 
     def testGetInstalled(self):
         pkg = ["pkgname", "pkgname-1.1-1.tar.bz2", "0"];
@@ -326,7 +327,7 @@ class TestCygApt(TestCase):
         expected.append(self.obj.getPkgName());
         ret = self.obj.getMissing();
 
-        self.assertEqual(ret, expected);
+        self.assertEqual(sorted(ret), sorted(expected));
 
     def testDoInstall(self):
         self.testDownload(self.obj.getPkgName());
@@ -522,7 +523,7 @@ class TestCygApt(TestCase):
         self.obj.install();
 
         expected = list();
-        requires = getattr(self._var_setupIni, packageName).requires;
+        requires = getattr(self._var_setupIni, packageName.lower()).requires;
         if requires :
             expected += requires.split(" ");
         expected.append(packageName);
@@ -534,6 +535,8 @@ class TestCygApt(TestCase):
             ['pkg'],
             ['pkgxz'],
             ['dashpkg'],
+            ['capspkg'],
+            ['Pkg'],
         ];
 
         if self._hasBatchInterpreter() :
@@ -615,6 +618,7 @@ class TestCygApt(TestCase):
             ['pkg', False],
             ['libpkg', False],
             ['not_exists_pkg', False],
+            ['barredcapspkg', True],
         ];
 
     def testGetRessourceWithSetupIniFieldWarnDeprecationWarning(self):
@@ -638,7 +642,7 @@ class TestCygApt(TestCase):
     def assertInstall(self, pkgname_list, onlyFiles=False):
         pkg_ini_list = [];
         for pkg in pkgname_list:
-            pkg_ini_list.append(self._var_setupIni.__dict__[pkg]);
+            pkg_ini_list.append(self._var_setupIni.__dict__[pkg.lower()]);
 
         for pkg in pkg_ini_list:
             for filename in pkg.filelist:
@@ -655,7 +659,7 @@ class TestCygApt(TestCase):
             # Confirm the package file list exists and correct
             gz_file = os.path.join(
                 self._dir_confsetup,
-                "{0}.lst.gz".format(pkg.name)
+                "{0}.lst.gz".format(pkg.name.lower())
             );
             f = gzip.open(gz_file);
             lines = f.readlines();
@@ -673,7 +677,7 @@ class TestCygApt(TestCase):
             with open(self._file_installed_db, 'r') as f :
                 contents = f.read();
             line = "{0} {1} 0".format(
-                pkg.name,
+                pkg.name.lower(),
                 os.path.basename(pkg.install.curr.url),
             );
             self.assertTrue(line in contents.splitlines(), message);

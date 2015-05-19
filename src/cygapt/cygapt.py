@@ -74,7 +74,7 @@ class CygApt:
         self.__noPostInstall = main_nopostinstall;
         self.__noPostRemove = main_nopostremove;
         self.__appName = main_scriptname;
-        self.__files = main_files;
+        self.__files = map(lambda v: str(v).lower(), main_files);
         self.__downloadOnly = main_download_p;
         self.__downloadDir = main_downloads;
         self.__noDeps = main_nodeps_p;
@@ -275,7 +275,7 @@ class CygApt:
         chunks = contents.split("\n\n@ ");
         for i in chunks[1:]:
             lines = i.split("\n");
-            name = lines[0].strip();
+            name = lines[0].strip().lower();
             self._debug("package: {0}".format(name));
             packages = self.__dists['curr'];
             records = {'sdesc': name};

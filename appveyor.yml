@@ -99,3 +99,5 @@ test_script:
     - 'cd'
     - '%PYTHON% %CYG_ROOT%/bin/cyg-apt -q install ping'
     - 'cd "%APPVEYOR_BUILD_FOLDER%"'
+    # test unstall a package name with caps
+    - '%PYTHON% %CYG_ROOT%/bin/cyg-apt -q install geoip'

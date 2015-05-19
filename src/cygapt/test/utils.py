@@ -320,7 +320,7 @@ class SetupIniProvider():
 
         packages = [
             PackageIni(app, self._architecture, name="libpkg"),
-            PackageIni(app, self._architecture, name="pkg", requires="libpkg"),
+            PackageIni(app, self._architecture, name="pkg", requires="libpkg capspkg"),
             PackageIni(app, self._architecture, name="libbarredpkg"),
             PackageIni(app, self._architecture, name="barredpkg", requires="libbarredpkg"),
             PackageIni(app, self._architecture, name="pkgxz", compression="xz"),
@@ -329,10 +329,12 @@ class SetupIniProvider():
             PackageIni(app, self._architecture, name="dashpkg", scriptsExt=".dash"),
             PackageIni(app, self._architecture, name="batpkg", scriptsExt=".bat"),
             PackageIni(app, self._architecture, name="cmdpkg", scriptsExt=".cmd"),
+            PackageIni(app, self._architecture, name="CapsPkg"),
+            PackageIni(app, self._architecture, name="BarredCapsPkg"),
         ];
 
         for package in packages :
-            name = package.name;
+            name = package.name.lower();
             self.__dict__[name] = package;
             for distname in self.dists.__dict__:
                 if None is self.dists.__dict__[distname] :
@@ -460,7 +462,7 @@ class PackageIni():
 
         for distname in self.install.__dict__:
             tarball = "{0}-{1}.tar.{2}".format(
-                self.name,
+                self.name.lower(),
                 self.version.__dict__[distname],
                 self._compression,
             );
@@ -471,7 +473,7 @@ class PackageIni():
 
         for distname in self.source.__dict__:
             srctarball = "{0}-{1}.src.tar.{2}".format(
-                self.name,
+                self.name.lower(),
                 self.version.__dict__[distname],
                 self._compression,
             );
