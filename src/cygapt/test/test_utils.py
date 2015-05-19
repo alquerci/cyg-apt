@@ -430,6 +430,35 @@ class TestUtils(TestCase):
 
         self.assertEqual(sorted(filelist), sorted(self._var_setupIni.__dict__[pkgname].filelist));
 
+    @dataProvider('getIsTarfileData')
+    def testIsTarfile(self, filename, expected):
+        fn = os.path.join(__DIR__, 'fixtures', 'utils', filename);
+        self.assertTrue(utils.is_tarfile(fn) is expected);
+        self.assertFalse(os.path.exists(os.path.splitext(fn)[0]));
+
+    def getIsTarfileData(self):
+        return [
+            ['badtar.tar.xz', False],
+            ['empty.tar.xz', False],
+            ['valid.tar.xz', True],
+            ['emptytar.tar.xz', True],
+        ];
+
+    @dataProvider('getIsTarfileData')
+    def testIsTarfileWithoutPATH(self, filename, expected):
+        if not sys.platform.startswith("cygwin") and not sys.platform.startswith("linux") :
+            self.skipTest("requires cygwin or linux");
+
+        fn = os.path.join(__DIR__, 'fixtures', 'utils', filename);
+        old_path = os.environ['PATH'];
+
+        try:
+            os.environ['PATH'] = "";
+            self.assertTrue(utils.is_tarfile(fn, '/usr/bin/xz') is expected);
+            self.assertFalse(os.path.exists(os.path.splitext(fn)[0]));
+        finally:
+            os.environ['PATH'] = old_path;
+
     @dataProvider('getPEArchitectureData')
     def testPEArchitecture(self, filename, expected):
         fn = os.path.join(__DIR__, 'fixtures', 'utils', filename);

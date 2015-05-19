@@ -30,6 +30,7 @@ from cygapt.exception import UnexpectedValueException;
 from cygapt.url_opener import CygAptURLopener;
 from cygapt.structure import ConfigStructure;
 from cygapt.process import Process;
+from cygapt.process.exception import ProcessFailedException;
 
 def cygpath(path):
     p = Process(["cygpath", path]);
@@ -97,7 +98,18 @@ def open_tarfile(ball, xzPath='xz'):
         ball = ball[:-3]; # remove .xz extension
         remove_if_exists(ball);
         Process([xzPath, '-k', '-d', ball_orig]).mustRun();
-    tf = tarfile.open(ball);
+        # an empty tarball is valid
+        if 0 == os.path.getsize(ball) :
+            with tarfile.open(ball, 'w'):
+                pass;
+    try:
+        tf = tarfile.open(ball);
+    except tarfile.TarError:
+        if ball_orig != ball:
+            remove_if_exists(ball);
+
+        raise;
+
     if ball_orig != ball:
         tf_close_orig = tf.close;
         def tf_close():
@@ -107,8 +119,14 @@ def open_tarfile(ball, xzPath='xz'):
         tf.close = tf_close;
     return tf;
 
-def is_tarfile(ball):
-    return ball.lower().endswith('.tar.xz') or tarfile.is_tarfile(ball);
+def is_tarfile(ball, xzPath='xz'):
+    try:
+        open_tarfile(ball, xzPath).close();
+        return True;
+    except tarfile.TarError:
+        return False;
+    except ProcessFailedException:
+        return False;
 
 def prsort(lst):
     lst.sort();

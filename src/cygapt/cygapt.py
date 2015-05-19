@@ -790,7 +790,7 @@ class CygApt:
 
     def _doInstall(self):
         ball = self.getBall();
-        if cautils.is_tarfile(ball):
+        if cautils.is_tarfile(ball, self.__dosXz):
             if not self.__cygwinPlatform:
                 self._doInstallExternal(ball);
             tf = cautils.open_tarfile(ball, self.__dosXz);
@@ -1199,7 +1199,7 @@ class CygApt:
             ));
             return 1;
         os.mkdir(self.__pkgName);
-        if cautils.is_tarfile(ball):
+        if cautils.is_tarfile(ball, self.__dosXz):
             tf = cautils.open_tarfile(ball, self.__dosXz);
             tf.extractall(self.__pkgName);
             tf.close();

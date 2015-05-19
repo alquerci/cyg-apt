@@ -9,3 +9,9 @@ cyglsa-bad1.dll : MZ header changed to ZM
 cyglsa-bad2.dll : PE\0\0 header changed to EP\0\0
 cyglsa-bad3.dll : machine value changed from 0x014C to 0xDEAD
 cyglsa-bad4.dll : truncated before PE header
+
+empty.tar.xz    : empty file
+emptytar.tar.xz : empty file with lzma compression
+valid.tar.xz    : empty file in a tarball with lzma compression 
+badtar.tar.xz   : corrupted tarball with lzma compression 
+badlzma.tar.xz  : corrupted lzma compression 
