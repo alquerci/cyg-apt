@@ -239,16 +239,20 @@ class CygApt:
         );
 
     def _stringToVersion(self, s):
+        dashPosition = s.find('-');
+        build = s[dashPosition + 1:];
+        s = s[:dashPosition];
         s = re.sub(r"([^0-9][^0-9]*)", " \\1 ", s);
         s = re.sub(r"[ _.-][ _.-]*", " ", s);
+        s = s.rstrip(' ');
         def try_atoi(x):
             if re.match(r"^[0-9]*$", x):
                 return int(x);
             return x
-        return tuple(map(try_atoi, (s.split(' '))));
+        return tuple(map(try_atoi, s.split(' ') + [build]));
 
     def _splitBall(self, p):
-        m = re.match(r"^(.*)-([0-9].*-[0-9]+)(.tar.(bz2|xz))?$", p);
+        m = re.match(r"^(.*)-([0-9].*-[0-9]+[.\w]*?)(.tar.(bz2|xz))?$", p);
         if not m:
             print("splitBall: {0}".format(p));
             return (p[:2], (0, 0));
