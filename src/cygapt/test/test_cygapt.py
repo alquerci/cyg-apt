@@ -180,30 +180,48 @@ class TestCygApt(TestCase):
         self.obj._runScript(script, False);
         self.assertTrue(os.path.exists(map_script_done));
 
-    def testVersionToString(self):
-        versiont = [1,12,3,1];
-        out = "1.12.3-1";
-        ret = self.obj._versionToString(versiont);
-        self.assertEqual(ret, out);
+    @dataProvider('getVersionToStringData')
+    def testVersionToString(self, value, expected):
+        ret = self.obj._versionToString(value);
+        self.assertEqual(ret, expected);
 
-    def testStringToVersion(self):
-        string = "1.12.3-1";
-        out = [1,12,3,1];
-        ret = self.obj._stringToVersion(string);
-        self.assertEqual(list(ret), out);
+    def getVersionToStringData(self):
+        return [
+            [[1, 12, 3, 1], "1.12.3-1"],
+            [[1, 12, 3, "1.23foo45"], "1.12.3-1.23foo45"],
+        ];
 
-    def testSplitBall(self):
-        value = "pkgball-1.12.3-1.tar.bz2";
-        output = ["pkgball", (1,12,3,1)];
+    @dataProvider('getVersionToStringData')
+    def testStringToVersion(self, expected, value):
+        ret = self.obj._stringToVersion(value);
+        self.assertEqual(list(ret), expected);
+
+    @dataProvider('getSplitBallData')
+    def testSplitBall(self, value, expected):
         ret = self.obj._splitBall(value);
-        self.assertEqual(list(ret), output);
+        self.assertEqual(list(ret), expected);
         
-    def testJoinBall(self):
-        value = ["pkgball", [1,12,3,1]];
-        output = "pkgball-1.12.3-1";
+    def getSplitBallData(self):
+        return [
+            ["pkgball-1.12.3-1.tar.bz2", ["pkgball", (1, 12, 3, 1)]],
+            ["pkgball-1.2-1.tar.xz", ["pkgball", (1, 2, 1)]],
+            ["pkgball-1.12.3-1.23foo45.tar.bz2", ["pkgball", (1, 12, 3, "1.23foo45")]],
+            ["pkgball-1.2.34c-56.tar.bz2", ["pkgball", (1, 2, 34, "c", 56)]],
+            ["pkgball-1.2.34.c-56.tar.bz2", ["pkgball", (1, 2, 34, "c", 56)]],
+        ];
+
+    @dataProvider('getJoinBallData')
+    def testJoinBall(self, expected, value):
         ret = self.obj._joinBall(value);
-        self.assertEqual(ret, output);
-        
+        self.assertEqual(ret, expected);
+
+    def getJoinBallData(self):
+        return [
+            ["pkgball-1.12.3-1", ["pkgball", (1, 12, 3, 1)]],
+            ["pkgball-1.12.3-1.23foo45", ["pkgball", (1, 12, 3, "1.23foo45")]],
+            ["pkgball-1.2.34.c-56", ["pkgball", (1, 2, 34, "c", 56)]],
+        ];
+
     def testGetSetupIni(self):
         self.obj.setDists(0);
         self.obj._getSetupIni();
