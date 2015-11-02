@@ -40,7 +40,7 @@ class CygAptMain():
 
     def getAppName(self):
         if self.__appName is None:
-            self.__appName = os.path.basename(sys.argv[0]);
+            self.__appName = os.path.basename(sys.argv[0].replace('\\', '/'));
             if (self.__appName[-3:] == ".py"):
                 self.__appName = self.__appName[:-3];
         return self.__appName;

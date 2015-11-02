@@ -881,7 +881,7 @@ class CygApt:
             os.remove(lst_name);
         else:
             sys.stderr.write("{0}: warning {1} no such file\n".format(
-                 sys.argv[0], lst_name
+                self.__appName, lst_name
             ));
 
     def _uninstallWantFileRemoved(self, filename, noremoves, nowarns):

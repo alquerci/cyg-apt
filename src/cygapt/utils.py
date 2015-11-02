@@ -161,7 +161,7 @@ def rmtree_helper(path):
 
 def uri_get(directory, uri, verbose=False):
     up = urlparse.urlparse(uri);
-    scriptname = os.path.basename(sys.argv[0]);
+    scriptname = os.path.basename(sys.argv[0].replace('\\', '/'));
 
     if up.scheme == "file":
         shutil.copy(uri[7:], directory);
