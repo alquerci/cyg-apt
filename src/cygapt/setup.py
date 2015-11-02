@@ -94,7 +94,7 @@ class CygAptSetup:
     def __init__(self, cygwin_p, verbose, arch="x86"):
         self.__cygwinPlatform = cygwin_p;
         self.__verbose = verbose;
-        self.__appName = os.path.basename(sys.argv[0]);
+        self.__appName = os.path.basename(sys.argv[0].replace('\\', '/'));
         self.setTmpDir();
         self.setPathMapper();
         self.__setupDir = "/etc/setup";
