@@ -216,6 +216,9 @@ class CygApt:
     def _checkForSetupExe(self):
         # It's far from bulletproof, but it's surprisingly hard to detect
         # setup.exe running since it doesn't lock any files.
+        if 'true' == os.getenv('CI').lower() :
+            return;
+
         p = Process([self.__pm.mapPath("/bin/ps"), "-W"]);
         p.run();
         psout = p.getOutput().splitlines(True);

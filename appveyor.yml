@@ -126,8 +126,6 @@ install:
     - 'if "2.6" == "%PYTHON_VERSION%" if not exist "%PYTHON_DIR%\Lib\site-packages\argparse.py" appveyor DownloadFile https://raw.githubusercontent.com/bewest/argparse/master/argparse.py -FileName "%PYTHON_DIR%\Lib\site-packages\argparse.py"'
     - 'if not exist "%CYG_SETUP%" appveyor DownloadFile http://cygwin.com/setup-x86_64.exe -FileName "%CYG_SETUP%"'
     - '"%CYG_SETUP%" -qnNdO -a "%CYG_ARCH%" -R "%CYG_ROOT%" -s "%CYG_MIRROR%" -l "%CYG_CACHE%" -P make -P python -P gnupg'
-    - 'REM Wait for cygwin setup closed'
-    - '%CYG_ROOT%\bin\bash -lc "cd \"$OLDPWD\"; while ps -W | grep -iP ''(?<![a-z0-9_ -])setup(|-1\.7|-x86|-x86_64)\.exe'' ; do sleep 10; done"'
     - '%CYG_ROOT%\bin\du.exe -s %CYG_CACHE%'
 
 before_build:
