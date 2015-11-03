@@ -1,6 +1,15 @@
 cache:
     - '%CYG_CACHE%'
 
+matrix:
+    allow_failures:
+        -
+            CYG_ARCH: x86
+            CYG_ROOT: C:/cygwin
+            CYG_CACHE: 'C:\cygwin\var\cache\setup'
+            PYTHON: C:/cygwin/bin/python2.7.exe
+            PYTHON_PLATFORM: cygwin
+
 environment:
     global:
         CYG_MIRROR: http://cygwin.uib.no
@@ -80,6 +89,12 @@ environment:
             PYTHON_DIR: 'C:\\python26'
             PYTHON_VERSION: '2.6'
             PYTHON_ARCH: '32'
+        -
+            CYG_ARCH: x86
+            CYG_ROOT: C:/cygwin
+            CYG_CACHE: 'C:\cygwin\var\cache\setup'
+            PYTHON: C:/cygwin/bin/python2.7.exe
+            PYTHON_PLATFORM: cygwin
 
 init:
     - 'echo OS architecture: %PROCESSOR_ARCHITECTURE%'
