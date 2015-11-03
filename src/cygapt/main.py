@@ -105,6 +105,7 @@ class CygAptMain():
             main_arch = 'x86';
 
         cas = CygAptSetup(main_cygwin_p, main_verbose, main_arch);
+        cas.setAppName(self.getAppName());
 
         # run command
         if (main_command == "setup"):
