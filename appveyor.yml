@@ -12,7 +12,7 @@ matrix:
 
 environment:
     global:
-        CYG_MIRROR: http://cygwin.uib.no
+        CYG_MIRROR: http://cygwin.parentingamerica.com
 
     matrix:
         -
