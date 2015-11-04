@@ -6,23 +6,23 @@ matrix:
         -
             # cygwin+x86 python-2.7+x86 not work
             CYG_ARCH: x86
-            PYTHON: 'C:\cygwin-%CYG_ARCH%\bin\python2.7.exe'
+            PYTHON: '%CYG_ROOT%\bin\python2.7.exe'
             PYTHON_PLATFORM: cygwin
 
 environment:
     global:
         CYG_MIRROR: http://cygwin.parentingamerica.com
         CYG_SETUP: '%TMP%\cygwin-setup.exe'
-        CYG_CACHE: 'C:\cygwin-%CYG_ARCH%\var\cache\setup'
+        CYG_CACHE: '%CYG_ROOT%\var\cache\setup'
         CYG_ROOT: 'C:\cygwin-%CYG_ARCH%'
         PYTHON: '%PYTHON_DIR%\python.exe'
-        CYG_ENV: 'C:\cygwin-%CYG_ARCH%\bin\bash -lc "cd \"$OLDPWD\"; '
+        CYG_ENV: '%CYG_ROOT%\bin\bash -lc "cd \"$OLDPWD\"; '
 
     matrix:
         -
             # cygwin+x64 python-2.7+x64
             CYG_ARCH: x86_64
-            PYTHON: 'C:\cygwin-%CYG_ARCH%\bin\python2.7.exe'
+            PYTHON: '%CYG_ROOT%\bin\python2.7.exe'
             PYTHON_PLATFORM: cygwin
         -
             # cygwin+x64 wpython-2.7+x86
@@ -83,7 +83,7 @@ environment:
         -
             # cygwin+x86 python-2.7+x86 not work
             CYG_ARCH: x86
-            PYTHON: 'C:\cygwin-%CYG_ARCH%\bin\python2.7.exe'
+            PYTHON: '%CYG_ROOT%\bin\python2.7.exe'
             PYTHON_PLATFORM: cygwin
 
 init:
